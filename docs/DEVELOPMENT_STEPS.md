@@ -57,15 +57,18 @@ Headless result: Factorio 2.0.76 created and benchmark-loaded a new save with `q
 
 ## Packaging And Release
 
-- [ ] Decide versioning rules.
+- [x] Decide versioning rules.
 - [x] Add package script if needed.
 - [x] Validate the zip layout before release.
-- [ ] Write release notes.
-- [ ] Decide whether to publish to GitHub only or also the Factorio mod portal.
+- [x] Write release notes.
+- [x] Add GitHub release helper.
+- [x] Decide whether to publish to GitHub only or also the Factorio mod portal.
+
+Release channel decision: use GitHub Releases for V0.1.0 real-client testing. Publish to the Factorio Mod Portal after a real client confirms the GUI opens, crafts, and reloads cleanly.
 
 ## Debugging Workflow
 
 - [x] Record useful log paths.
 - [x] Record launch commands.
-- [ ] Record commands or remote interfaces added by the mod.
+- [x] Record commands or remote interfaces added by the mod.
 - [ ] Keep reproducible bug notes tied to exact Factorio version and mod version.

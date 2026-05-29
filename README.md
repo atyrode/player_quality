@@ -48,6 +48,24 @@ Override the target folder when needed:
 FACTORIO_MODS_DIR=/path/to/factorio/mods scripts/install-local.sh
 ```
 
+Publish or update the GitHub release for the current `info.json` version:
+
+```sh
+scripts/release.sh
+```
+
+The first iteration should use GitHub Releases. Wait on the Factorio Mod Portal until the real client GUI playtest passes.
+
+## Download And Playtest
+
+Use the latest GitHub release:
+
+```text
+https://github.com/atyrode/player_quality/releases/latest
+```
+
+The full install and instant new-save setup path is in [docs/PLAYTEST.md](docs/PLAYTEST.md).
+
 ## Fast Manual Test
 
 1. Run `scripts/install-local.sh`.
@@ -83,3 +101,4 @@ The first package has been smoke-tested with Factorio 2.0.76 headless by creatin
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): repository structure, runtime responsibilities, and ownership boundaries.
 - [docs/DESIGN.md](docs/DESIGN.md): gameplay, balance, UX, terminology, art, and compatibility direction.
 - [docs/DEVELOPMENT_STEPS.md](docs/DEVELOPMENT_STEPS.md): working checklist.
+- [docs/PLAYTEST.md](docs/PLAYTEST.md): release download, install, instant setup, and report-back checklist.

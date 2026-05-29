@@ -94,6 +94,12 @@ Likely eventual helpers:
 
 GitHub releases come first. Factorio mod portal packaging comes after the first locally validated build.
 
+Current release direction:
+
+- Use `scripts/release.sh` to build the zip and create or update a GitHub release for the current `info.json` version.
+- Use `docs/PLAYTEST.md` as the operator-facing install and test guide.
+- Defer Factorio Mod Portal publishing until a real Factorio client validates the GUI workflow.
+
 ## Validation Direction
 
 Useful checks may include:

@@ -34,3 +34,4 @@ Not reused now:
 5. Fill [DESIGN.md](DESIGN.md) with gameplay, UX, balance, terminology, and settings decisions.
 6. Update [ARCHITECTURE.md](ARCHITECTURE.md) once the runtime file layout is chosen.
 7. Track implementation in [DEVELOPMENT_STEPS.md](DEVELOPMENT_STEPS.md).
+8. Use [PLAYTEST.md](PLAYTEST.md) for release download, install, new-save setup, and report-back steps.
