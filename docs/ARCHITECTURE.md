@@ -7,8 +7,11 @@ Status: initial direction recorded from operator answers on 2026-05-29.
 - `AGENTS.md`: persistent workflow rules for future agents and contributors.
 - `README.md`: repository entry point and documentation map.
 - `docs/`: planning, design, architecture, and checklist documents.
-
-Runtime mod files are not scaffolded yet.
+- `info.json`: mod metadata and dependencies.
+- `data.lua`: quality-module equipment, items, recipes, shortcut, and keybind prototypes.
+- `control.lua`: Player Quality GUI, equipment quality chance scan, ingredient removal, quality rolls, and output insertion.
+- `locale/en/player-quality.cfg`: English names, descriptions, GUI text, and command help.
+- `scripts/`: lightweight check and package helpers.
 
 Expected first runtime shape:
 
@@ -80,6 +83,13 @@ Expected dependency on vanilla prototypes:
 - Vanilla armor equipment category should be used if possible so existing modular armor grids accept the equipment.
 
 Avoid modifying vanilla quality modules or armor grids unless testing proves it is required.
+
+Current implementation details:
+
+- The equipment prototypes are 1x1 `battery-equipment` with 1J capacity and 1W flow so they can be inserted into standard armor grids while adding no meaningful power benefit.
+- Recipes consume the matching vanilla quality module plus a small amount of circuits and batteries.
+- Recipes are unlocked from the matching vanilla quality module technologies when those technologies exist.
+- Runtime quality rolls read the equipped module item's quality-scaled `quality` effect, then follow the prototype quality chain with `current.next_probability` as the vanilla multiplier.
 
 ## Compatibility Practices
 

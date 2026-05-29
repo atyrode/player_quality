@@ -1,6 +1,6 @@
 # Project Spec
 
-Status: initial direction recorded from operator answers on 2026-05-29.
+Status: first packageable prototype implemented on 2026-05-29.
 
 ## Goal
 
@@ -46,6 +46,8 @@ Implementation files likely needed:
 - `locale/en/player-quality.cfg`
 - `scripts/package.sh` once local testing is ready
 
+Status: implemented locally as a packageable first prototype. Factorio 2.0.76 headless can load the mod, create a new save, and reload that save; GUI crafting still needs a real client playtest.
+
 Validation:
 
 - Load a clean Space Age or quality-enabled save.
@@ -59,11 +61,11 @@ Validation:
 
 After the proof of concept:
 
-- Add all three vanilla quality-module equipment tiers.
-- Gate equipment behind appropriate quality/module technologies.
 - Decide whether quality crafting should share the vanilla crafting queue timing or use a mod-owned queue.
 - Explore a GUI that appears near the player crafting screen or armor screen.
-- Add package and release scripts.
+- Expand eligible recipe support beyond simple single-product item recipes.
+- Validate add/remove-save behavior with a real save containing equipment and crafted outputs.
+- Add release automation after the first manual playtest passes.
 
 ## Success Criteria
 

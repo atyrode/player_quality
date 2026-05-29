@@ -1,0 +1,12 @@
+{
+  "name": "player_quality",
+  "version": "0.1.0",
+  "title": "Player Quality",
+  "author": "atyrode",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base >= 2.0.0",
+    "quality >= 2.0.0"
+  ],
+  "description": "Adds quality-module equipment for modular armor and a quality-aware player crafting interface."
+}

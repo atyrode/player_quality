@@ -58,6 +58,13 @@ Preferred later UX:
 
 - Show ingredient quality controls near the native player crafting menu if Factorio supports it cleanly.
 
+Current prototype behavior:
+
+- Crafting is instant.
+- The GUI lists simple unlocked item recipes in the `crafting` category.
+- The GUI skips recipes with fluids, non-item ingredients, multiple products, probabilistic products, or no ingredients.
+- Output upgrade rolls use equipped quality chance multiplied by each current quality tier's `next_probability`.
+
 ## Terminology
 
 - Player Quality: mod display name.
@@ -87,4 +94,3 @@ If the game requires custom icons for armor equipment variants, create simple de
 - Should the first playable version craft instantly or use a timed mod-owned queue?
 - Which recipes are eligible in V1: single-product item recipes only, or broader recipe support?
 - Should armor equipment size match vanilla module item size conceptually, or be larger for balance?
-- Should the equipment recipes consume the corresponding vanilla quality modules directly?

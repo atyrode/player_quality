@@ -20,11 +20,15 @@ Official docs checked:
 
 - Runtime docs version 2.0.77: https://lua-api.factorio.com/latest/
 - Prototype docs version 2.0.76: https://lua-api.factorio.com/latest/prototypes.html
+- `LuaRecipe::has_category` is available for recipe category checks: https://lua-api.factorio.com/latest/classes/LuaRecipe.html#has_category
+- `LuaForce::unlock_quality` and `LuaForce::is_quality_unlocked` are available for quality gating: https://lua-api.factorio.com/latest/classes/LuaForce.html#is_quality_unlocked
 - `LuaControl::begin_crafting` accepts a `RecipeID`, starts normal player crafting, and raises `on_pre_player_crafted_item`: https://lua-api.factorio.com/latest/classes/LuaControl.html#begin_crafting
 - `on_pre_player_crafted_item` exposes the recipe and removed ingredient inventory when crafting is queued: https://lua-api.factorio.com/latest/events.html#on_pre_player_crafted_item
 - `on_player_crafted_item` exposes the crafted item stack before insertion: https://lua-api.factorio.com/latest/events.html#on_player_crafted_item
 - Equipment grids support equipment quality and content inspection: https://lua-api.factorio.com/latest/classes/LuaEquipmentGrid.html
 - Module prototypes expose module effects, and item prototypes expose module effects by quality: https://lua-api.factorio.com/latest/prototypes/ModulePrototype.html
+- `LuaQualityPrototype::next` and `next_probability` expose the vanilla quality roll chain: https://lua-api.factorio.com/latest/classes/LuaQualityPrototype.html
+- `LuaInventory::get_item_count` accepts item-with-quality filters for exact-quality ingredient checks: https://lua-api.factorio.com/latest/classes/LuaInventory.html#get_item_count
 - Quality formula reference: https://wiki.factorio.com/Quality
 
 Confirm exact API names, lifecycle events, prototype formats, dependency syntax, and packaging rules against the installed Factorio version before implementation.
@@ -34,8 +38,8 @@ Confirm exact API names, lifecycle events, prototype formats, dependency syntax,
 - Target Factorio 2.0+.
 - The user is targeting Space Age because quality was added there.
 - The implementation should depend on the `quality` mod if sufficient, rather than requiring the full `space-age` mod.
-- Local install path is not known yet.
-- The VPS has Steam CLI available and enough `/mnt` storage; downloading a Factorio test install is a setup task.
+- A Factorio 2.0.76 headless test install is available on the VPS under `/mnt/HC_Volume_105232828/shared/games/factorio-headless/factorio`.
+- GUI testing still requires a real Factorio client.
 
 ## Dependency Policy
 
@@ -78,6 +82,8 @@ Likely V1 shape:
     `-- package.sh
 ```
 
+Current implementation matches this shape. The first runtime prototype uses a separate GUI and instant custom craft execution.
+
 ## Build And Package Direction
 
 Likely eventual helpers:
@@ -100,6 +106,12 @@ Useful checks may include:
 - Verifying the zip loads from the Factorio mods directory.
 - Testing add-to-existing-save and remove-from-save behavior.
 
+Current local checks:
+
+- `scripts/check.sh`: validates `info.json` and runs `luac -p` when `luac` is installed.
+- `scripts/package.sh`: runs checks and writes `dist/player_quality_0.1.0.zip`.
+- Factorio 2.0.76 headless successfully created and benchmark-loaded a new save with `quality`, `space-age`, and `player_quality` enabled, which validated data-stage loading, `control.lua` compilation, and save reload.
+
 ## Technical Risks
 
 - Runtime event handlers can affect performance if they run too often or scan too broadly.
@@ -111,3 +123,4 @@ Useful checks may include:
 - The native player crafting GUI may not expose a direct relative GUI target for injecting an ingredient quality selector.
 - Inert armor equipment needs a valid equipment prototype subtype; validate which subtype can be used without unwanted gameplay effects.
 - Reimplementing recipe handling can get complex for fluids, multiple products, catalysts, recursive prerequisites, and unlock gating. V1 should restrict eligible recipes until each case is proven.
+- The first implementation uses `battery-equipment` with 1J capacity and 1W flow as an inert armor-grid carrier. Validate in-game that this has no meaningful side effect beyond occupying grid space.
