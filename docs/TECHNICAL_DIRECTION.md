@@ -100,6 +100,7 @@ Current release direction:
 - Use `scripts/publish-portal.sh` to publish or update the Factorio Mod Portal release. It requires `FACTORIO_MOD_PORTAL_API_KEY` from `https://factorio.com/profile` with publish, upload, and edit permissions.
 - Use `docs/PLAYTEST.md` as the operator-facing install and test guide.
 - Prefer the Factorio Mod Portal for tester installs once V0.1.1 is published.
+- V0.1.1 is published on the Factorio Mod Portal at `https://mods.factorio.com/mod/player_quality`.
 
 ## Validation Direction
 

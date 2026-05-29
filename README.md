@@ -61,7 +61,7 @@ Publish or update the Factorio Mod Portal release:
 FACTORIO_MOD_PORTAL_API_KEY=<your-api-key> scripts/publish-portal.sh
 ```
 
-The API key must be created on `https://factorio.com/profile` with `ModPortal: Publish Mods`, `ModPortal: Upload Mods`, and `ModPortal: Edit Mods` usages. Do not commit the key or paste it into chat.
+The script also loads an ignored `.env` file and accepts `FACTORIO_API_KEY=<your-api-key>`. The API key must be created on `https://factorio.com/profile` with `ModPortal: Publish Mods`, `ModPortal: Upload Mods`, and `ModPortal: Edit Mods` usages. Do not commit the key or paste it into chat.
 
 ## Download And Playtest
 

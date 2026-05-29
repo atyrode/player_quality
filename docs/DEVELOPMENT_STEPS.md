@@ -69,6 +69,8 @@ V0.1.1 smoke result: a temporary local helper mod called the corrected Factorio 
 
 Release channel decision: publish V0.1.1 to the Factorio Mod Portal so in-game install/update can be used for faster iteration.
 
+Portal result: V0.1.1 is published at `https://mods.factorio.com/mod/player_quality`.
+
 ## Debugging Workflow
 
 - [x] Record useful log paths.

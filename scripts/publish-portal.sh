@@ -3,10 +3,16 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-api_key="${FACTORIO_MOD_PORTAL_API_KEY:-}"
+if [ -f .env ]; then
+  set -a
+  . ./.env
+  set +a
+fi
+
+api_key="${FACTORIO_MOD_PORTAL_API_KEY:-${FACTORIO_API_KEY:-}}"
 if [ -z "$api_key" ]; then
   cat >&2 <<'EOF'
-Missing FACTORIO_MOD_PORTAL_API_KEY.
+Missing FACTORIO_MOD_PORTAL_API_KEY or FACTORIO_API_KEY.
 
 Create an API key at https://factorio.com/profile with these usages:
 - ModPortal: Publish Mods
@@ -15,6 +21,9 @@ Create an API key at https://factorio.com/profile with these usages:
 
 Then run:
   FACTORIO_MOD_PORTAL_API_KEY=<your-api-key> scripts/publish-portal.sh
+
+Or put this in an ignored .env file:
+  FACTORIO_API_KEY=<your-api-key>
 
 Do not commit the key or paste it into chat.
 EOF
