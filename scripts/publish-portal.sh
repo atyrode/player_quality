@@ -39,16 +39,18 @@ description_path="dist/mod-portal-description.md"
 cat > "$description_path" <<DESC
 # Player Quality
 
-Player Quality lets players install quality-module-style equipment into modular armor, then hand-craft with selected ingredient quality through a small dedicated GUI.
+Player Quality lets players install personal assembler equipment into modular armor. Each equipped assembler opens a linked vanilla assembler GUI, so recipe quality, ingredient quality, and module slots work like a normal assembler while the mod moves item ingredients and outputs through the player's inventory.
 
 Current prototype:
 
-- Personal quality module equipment for quality module tiers 1, 2, and 3.
-- GUI opened with Ctrl + Shift + Q, the shortcut button, or /player-quality.
-- Exact ingredient quality selection for simple unlocked item recipes.
-- Output quality rolls based on equipped quality module chance and the vanilla quality chain.
+- Personal assembler equipment for tiers 1, 2, and 3.
+- Bottom-right Personal assemblers panel appears while equipment is worn.
+- Linked vanilla assembler UI handles recipe quality, ingredient quality, and quality modules.
+- Item ingredients are pulled from player inventory and outputs are returned to the player.
+- Armor-grid energy is drained while linked assemblers are enabled and crafting.
+- Debug GUI opened with Ctrl + Shift + Q, the shortcut button, or /player-quality.
 
-This is an early iteration. Recipe support is intentionally limited to simple single-product item recipes while the core workflow is tested.
+This is an early iteration. Automatic transfer currently focuses on item ingredients and item outputs; fluid recipes still need a later design.
 
 Source:
 https://github.com/atyrode/player_quality
@@ -97,7 +99,7 @@ if edit_response="$(
     -H "Authorization: Bearer ${api_key}" \
     -F "mod=${mod_name}" \
     -F "title=Player Quality" \
-    -F "summary=Equip quality modules in modular armor and use them for quality-aware hand crafting." \
+    -F "summary=Install personal assemblers in modular armor and craft through linked vanilla quality-aware assembler GUIs." \
     -F "description=<${description_path}" \
     -F "category=tweaks" \
     -F "tags=armor" \
