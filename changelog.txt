@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+Date: 2026-05-29
+  Features:
+    - Added /player-quality-test-setup for quick new-save testing without pasting a long console command.
+  Testing:
+    - Confirmed the test equipment prototype can be inserted into a power armor grid when Player Quality is enabled.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.1.1
 Date: 2026-05-29
   Bugfixes:

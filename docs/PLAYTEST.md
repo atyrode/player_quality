@@ -1,6 +1,6 @@
 # Playtest Guide
 
-Status: V0.1.1 real-client playtest path.
+Status: V0.1.2 real-client playtest path.
 
 ## Release Channel
 
@@ -18,10 +18,10 @@ Fallback GitHub release page:
 https://github.com/atyrode/player_quality/releases/latest
 ```
 
-Direct V0.1.1 GitHub zip:
+Direct V0.1.2 GitHub zip:
 
 ```text
-https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip
+https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip
 ```
 
 ## Install
@@ -44,21 +44,21 @@ Linux:
 
 ```sh
 mkdir -p ~/.factorio/mods
-curl -L -o ~/.factorio/mods/player_quality_0.1.1.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip
+curl -L -o ~/.factorio/mods/player_quality_0.1.2.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:APPDATA\Factorio\mods"
-Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.1.zip"
+Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.2.zip"
 ```
 
 macOS:
 
 ```sh
 mkdir -p "$HOME/Library/Application Support/factorio/mods"
-curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.1.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip
+curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.2.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip
 ```
 
 You can also download the zip from the release page in a browser, then place it in the same mods folder.
@@ -76,11 +76,13 @@ If you already installed an older Player Quality zip, remove the old `player_qua
 
 ## Instant Test Setup
 
-Paste this into the in-game console in the new test save. Factorio will warn that `/c` commands disable achievements for that save.
+Paste this into the in-game console in the new test save:
 
 ```lua
-/c local p=game.player; local f=p.force; for _, q in pairs({"uncommon", "rare", "epic", "legendary"}) do if prototypes.quality[q] then f.unlock_quality(q) end end; for _, r in pairs({"player-quality-quality-module-equipment", "player-quality-quality-module-2-equipment", "player-quality-quality-module-3-equipment"}) do if f.recipes[r] then f.recipes[r].enabled = true end end; local armor=p.get_inventory(defines.inventory.character_armor)[1]; armor.set_stack{name="power-armor", count=1}; local grid=armor.grid; for _=1, 40 do grid.put{name="player-quality-quality-module-3-equipment"} end; p.insert{name="iron-plate", count=1000}; p.insert{name="iron-plate", count=1000, quality="rare"}; p.insert{name="copper-plate", count=1000}; p.insert{name="copper-plate", count=1000, quality="rare"}
+/player-quality-test-setup
 ```
+
+If Factorio says this command is unknown, `Player Quality` is not enabled in the current mod set or Factorio has not restarted after enabling it.
 
 Then:
 

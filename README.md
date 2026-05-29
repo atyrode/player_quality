@@ -80,10 +80,10 @@ The full install and instant new-save setup path is in [docs/PLAYTEST.md](docs/P
 1. Run `scripts/install-local.sh`.
 2. Start Factorio 2.0 or Space Age with the `quality` mod and `player_quality` enabled.
 3. Start or load a save.
-4. Use this console setup command for a quick prototype test. Factorio will warn that console commands disable achievements for the save.
+4. Use this console command for a quick prototype test.
 
 ```lua
-/c local p=game.player; for _, q in pairs({"uncommon", "rare", "epic", "legendary"}) do if prototypes.quality[q] then p.force.unlock_quality(q) end end; p.force.recipes["player-quality-quality-module-3-equipment"].enabled = true; local armor = p.get_inventory(defines.inventory.character_armor)[1]; armor.set_stack{name="power-armor", count=1}; for _ = 1, 10 do armor.grid.put{name="player-quality-quality-module-3-equipment"} end; p.insert{name="iron-plate", count=200}; p.insert{name="iron-plate", count=200, quality="rare"}
+/player-quality-test-setup
 ```
 
 5. Open the Player Quality GUI with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`.

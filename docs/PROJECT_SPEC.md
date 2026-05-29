@@ -1,6 +1,6 @@
 # Project Spec
 
-Status: V0.1.1 crash fix implemented on 2026-05-29.
+Status: V0.1.2 quick-test setup implemented on 2026-05-29.
 
 ## Goal
 
@@ -46,7 +46,7 @@ Implementation files likely needed:
 - `locale/en/player-quality.cfg`
 - `scripts/package.sh` once local testing is ready
 
-Status: implemented locally as a packageable first prototype. Factorio 2.0.76 headless can load the mod, create a new save, and reload that save. V0.1.1 fixes the first reported GUI-open crash; GUI crafting still needs a follow-up real client playtest.
+Status: implemented locally as a packageable first prototype. Factorio 2.0.76 headless can load the mod, create a new save, and reload that save. V0.1.1 fixed the first reported GUI-open crash. V0.1.2 adds `/player-quality-test-setup` for faster real-client testing.
 
 Validation:
 

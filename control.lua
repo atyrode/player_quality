@@ -526,6 +526,58 @@ local function toggle_gui(player)
   end
 end
 
+local function setup_test_player(player)
+  local force = player.force
+  for _, quality_name in pairs({ "uncommon", "rare", "epic", "legendary" }) do
+    if prototypes.quality[quality_name] and force.unlock_quality then
+      force.unlock_quality(quality_name)
+    end
+  end
+
+  for _, recipe_name in pairs({
+    MOD_PREFIX .. "quality-module-equipment",
+    MOD_PREFIX .. "quality-module-2-equipment",
+    MOD_PREFIX .. "quality-module-3-equipment"
+  }) do
+    local recipe = force.recipes[recipe_name]
+    if recipe then
+      recipe.enabled = true
+    end
+  end
+
+  local armor_inventory = player.get_inventory(defines.inventory.character_armor)
+  if not armor_inventory or not armor_inventory.valid then
+    player.print({ "player-quality.test-setup-no-armor-inventory" })
+    return
+  end
+
+  local armor = armor_inventory[1]
+  armor.set_stack({ name = "power-armor", count = 1 })
+
+  local grid = armor.grid
+  if not grid then
+    player.print({ "player-quality.test-setup-no-grid" })
+    return
+  end
+
+  for _ = 1, 40 do
+    local ok, equipment = pcall(function()
+      return grid.put({ name = MOD_PREFIX .. "quality-module-3-equipment" })
+    end)
+
+    if not ok or not equipment then
+      player.print({ "player-quality.test-setup-equipment-failed" })
+      return
+    end
+  end
+
+  player.insert({ name = "iron-plate", count = 1000 })
+  player.insert({ name = "iron-plate", count = 1000, quality = "rare" })
+  player.insert({ name = "copper-plate", count = 1000 })
+  player.insert({ name = "copper-plate", count = 1000, quality = "rare" })
+  player.print({ "player-quality.test-setup-ready" })
+end
+
 script.on_event(MOD_PREFIX .. "toggle-gui", function(event)
   local player = game.get_player(event.player_index)
   if player then
@@ -592,5 +644,12 @@ commands.add_command("player-quality", { "player-quality.command-help" }, functi
   local player = event.player_index and game.get_player(event.player_index)
   if player then
     toggle_gui(player)
+  end
+end)
+
+commands.add_command("player-quality-test-setup", { "player-quality.test-setup-command-help" }, function(event)
+  local player = event.player_index and game.get_player(event.player_index)
+  if player then
+    setup_test_player(player)
   end
 end)

@@ -1,6 +1,6 @@
 # Development Checklist
 
-Status: V0.1.1 crash fix implemented on 2026-05-29.
+Status: V0.1.2 quick-test setup implemented on 2026-05-29.
 
 ## Research
 
@@ -67,9 +67,11 @@ V0.1.1 smoke result: a temporary local helper mod called the corrected Factorio 
 - [x] Add Factorio Mod Portal publish helper.
 - [x] Decide whether to publish to GitHub only or also the Factorio mod portal.
 
-Release channel decision: publish V0.1.1 to the Factorio Mod Portal so in-game install/update can be used for faster iteration.
+Release channel decision: publish to the Factorio Mod Portal so in-game install/update can be used for faster iteration.
 
 Portal result: V0.1.1 is published at `https://mods.factorio.com/mod/player_quality`.
+
+V0.1.2 adds `/player-quality-test-setup` so test saves can be prepared without a long `/c` command.
 
 ## Debugging Workflow
 
