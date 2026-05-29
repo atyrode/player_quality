@@ -2,13 +2,13 @@
 
 Factorio mod project workspace.
 
-The mod concept is intentionally not filled in yet. This repository currently holds the contributor instructions and planning documents that will guide the first implementation pass once the mod goals are confirmed.
+The target mod lets players put quality-module-style equipment into modular armor. When equipped, the player can hand-craft with quality ingredients and receive quality-upgrade rolls like an assembling machine with quality modules.
 
 ## Current Shape
 
 - Persistent agent/contributor workflow rules: [AGENTS.md](AGENTS.md).
 - Planning and tracking documents: [docs/](docs/).
-- Runtime mod files are not scaffolded yet. Add them after the target Factorio version, gameplay goal, and first testable milestone are decided.
+- Runtime mod files are not scaffolded yet. Add them after the quality crafting proof-of-concept path is validated against a local Factorio install.
 
 ## Development
 

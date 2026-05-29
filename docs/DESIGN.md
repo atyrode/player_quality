@@ -1,60 +1,76 @@
 # Design Direction
 
-Status: draft template, awaiting mod concept decisions.
+Status: initial direction recorded from operator answers on 2026-05-29.
 
 ## Player Experience
 
-TBD.
-
-Describe what a player should notice, do, or feel while using the mod.
+A player wearing modular armor can install quality modules as personal equipment. With that equipment installed, hand crafting gains a quality-aware path: choose the ingredient quality, craft from matching ingredients, and get the same chance-based quality upgrades that a machine would get from quality modules.
 
 ## Core Feature Idea
 
-TBD.
+Core loop:
 
-Record the smallest useful mechanic or quality-of-life behavior first. Avoid stacking multiple systems into V1 unless they are inseparable.
+- Craft or obtain quality-module armor equipment.
+- Insert it into modular armor.
+- Open the Player Quality crafting UI.
+- Pick recipe, ingredient quality, and count.
+- Craft using exact-quality ingredients.
+- Output quality is selected ingredient quality or better, based on equipped module chance.
+
+The long-term ideal is for this to feel like assembler ingredient-quality selection, but attached to the player's crafting workflow.
 
 ## Balance Direction
 
-TBD.
+This is balance-changing additional gameplay, not pure quality-of-life.
 
-Record whether the mod should be:
+Balance intent:
 
-- Pure quality-of-life.
-- Convenience with no production advantage.
-- Balance-changing but vanilla-feeling.
-- Cheat/debug/admin-oriented.
-- Overhaul-compatible helper behavior.
+- The player gets new personal quality crafting utility, but only by spending armor grid space.
+- Equipped module tier and equipment item quality should matter.
+- The output formula should follow vanilla quality rules instead of inventing a stronger shortcut.
+- V1 should avoid convenience features that bypass ingredient quality requirements.
 
 ## Settings Direction
 
-TBD.
+No settings are required yet.
 
-Settings should be added only for meaningful choices. Record:
+Possible later settings:
 
-- Setting name.
-- Scope: startup, map, or per-player.
-- Default value.
-- Why the default is safe.
-- Whether changing it affects existing saves.
+- Enable or disable native hand-crafting output upgrades if implemented.
+- Scale equipment size or module chance if balance testing shows the defaults are too strong.
+- Restrict quality crafting to unlocked recipe categories.
 
 ## UI And Controls
 
-TBD.
+V1 should start with a mod-owned Player Quality crafting GUI.
 
-Record any GUI, shortcut, command, hotkey, alert, or tooltip behavior.
+Expected controls:
+
+- Open button or shortcut.
+- Recipe selector.
+- Ingredient quality selector.
+- Count selector.
+- Craft button.
+- Clear feedback for missing exact-quality ingredients.
+- Clear feedback when no quality-module equipment is installed.
+
+Preferred later UX:
+
+- Show ingredient quality controls near the native player crafting menu if Factorio supports it cleanly.
 
 ## Terminology
 
-TBD.
-
-Use this section for player-facing terms, setting names, commands, and localization decisions.
+- Player Quality: mod display name.
+- Quality module equipment: armor-grid equipment that contributes quality chance to hand crafting.
+- Ingredient quality: the exact quality required for item ingredients.
+- Output quality: the quality of the crafted result after quality rolls.
+- Eligible recipe: a hand-craftable item recipe supported by the mod-owned crafting path.
 
 ## Art And Sound
 
-TBD.
+Prefer reusing vanilla quality module icons through prototype references.
 
-Keep this empty unless the mod needs custom assets. If assets are needed, document source, license, dimensions, naming, and packaging path before adding them.
+If the game requires custom icons for armor equipment variants, create simple derived icons and document source paths and license expectations before publishing.
 
 ## Mod Compatibility Policy
 
@@ -62,11 +78,13 @@ Keep this empty unless the mod needs custom assets. If assets are needed, docume
 - Avoid broad prototype edits when a runtime or setting-gated approach is safer.
 - Avoid hidden player advantages unless the mod is intentionally cheat/debug/admin-oriented.
 - Document interactions with Space Age and common overhaul mods before claiming compatibility.
+- Be agnostic toward other mods by default; do not claim support until tested.
+- Avoid patching other mods' recipes except through generic recipe eligibility checks.
 
 ## Open Questions
 
-- What exact player problem should `player_quality` solve?
-- Is the mod meant to be quality-of-life, gameplay balance, admin/debug tooling, or something else?
-- Should V1 work in vanilla Factorio only, Space Age only, or both?
-- Should multiplayer and dedicated servers be supported from the first version?
-- Should the mod be safe for existing saves from V1?
+- Can Factorio's native player crafting UI be augmented, or should we keep a separate GUI permanently?
+- Should the first playable version craft instantly or use a timed mod-owned queue?
+- Which recipes are eligible in V1: single-product item recipes only, or broader recipe support?
+- Should armor equipment size match vanilla module item size conceptually, or be larger for balance?
+- Should the equipment recipes consume the corresponding vanilla quality modules directly?

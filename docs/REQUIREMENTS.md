@@ -1,42 +1,45 @@
 # Requirements
 
-Status: draft template, awaiting mod concept decisions.
+Status: initial direction recorded from operator answers on 2026-05-29.
 
 ## Functional Requirements
 
-TBD.
-
-For each requirement, record:
-
-- Player-visible behavior.
-- Trigger or condition.
-- Expected result.
-- Configuration, if any.
-- Save and multiplayer implications.
+- The mod adds armor equipment items that represent quality modules.
+- Quality-module equipment can be inserted into modular armor grids.
+- When a player has quality-module equipment installed, the mod exposes a quality hand-crafting interface.
+- The interface lets the player choose an eligible recipe, ingredient quality, and craft count.
+- Ingredient quality is exact, matching vanilla quality-machine behavior: all item ingredients must be available at the selected quality.
+- Fluid-only recipes and recipes with fluid ingredients are out of V1 unless a direct player-crafting path is proven.
+- The output base quality is the selected ingredient quality.
+- Equipped quality-module equipment contributes quality chance according to the corresponding vanilla quality module and the equipment item's own quality.
+- The output quality roll should match Factorio quality behavior: roll once using total quality chance; if upgraded, repeat further upgrades with the game's 10% follow-up chance until the roll fails or the maximum unlocked quality is reached.
+- Multiplayer should work out of the box by keeping all state in deterministic runtime script state.
 
 ## User Experience Requirements
 
 - Player-facing text must be clear in Factorio's UI and localization format.
 - New controls, shortcuts, alerts, or GUI surfaces must be predictable and not compete with base-game workflows.
 - Settings should exist only when they change meaningful behavior.
+- The long-term preferred UX is for ingredient quality controls to feel close to assembler recipe quality controls.
+- V1 may use a separate mod-owned GUI if Factorio does not allow adding controls directly into the native player crafting menu.
 
 ## Compatibility Requirements
 
-TBD.
-
-Record expectations for:
-
-- Factorio base game version.
-- Space Age dependency status.
-- Other mods that should be supported or explicitly out of scope.
-- Multiplayer and dedicated-server behavior.
-- Existing saves and migrations.
+- Target Factorio 2.0+ with the quality feature enabled.
+- Prefer depending on `quality` rather than `space-age` if the feature can work without Space Age-specific planets or recipes.
+- Avoid direct edits to vanilla recipes where possible.
+- Avoid changing existing armor grid definitions unless required to let the new equipment fit.
+- Use a `player-quality` namespace for custom prototypes, settings, GUI element names, shortcuts, custom inputs, and runtime state.
+- Multiplayer and dedicated-server compatibility are V1 requirements.
+- Adding to an existing save is a V1 requirement.
+- Removing from a save should be safe in the Factorio sense: the game should load without the mod, and mod-owned items/state may be removed.
 
 ## Data And Persistence Requirements
 
-TBD.
-
-Record any use of persistent global state, per-player state, entity tags, forces, surfaces, storage, migrations, or remote interfaces.
+- Prefer no persistent state until the quality crafting proof of concept works.
+- If a custom crafting queue is needed, store only per-player queue entries with recipe, selected ingredient quality, count, progress, and pending output.
+- Do not store Lua objects in persistent state; store stable names, quality names, player indices, and numeric progress.
+- Add migrations before release if persistent queue data or settings schema change after a public build.
 
 ## Validation Requirements
 
@@ -47,9 +50,13 @@ Before release, define the smallest meaningful checks for:
 - Exercising the primary feature.
 - Multiplayer or headless server behavior, if required.
 - Migration behavior, if persistent state exists.
+- Equipping and removing quality-module equipment.
+- Crafting from normal and non-normal ingredients.
+- Verifying quality output distribution enough to catch obvious formula errors.
 
 ## Release Requirements
 
-TBD.
-
-Record packaging expectations, versioning rules, changelog format, and whether the mod should be published on the Factorio mod portal.
+- GitHub releases first for fast iteration.
+- Factorio mod portal is the end goal so friends can install and update easily.
+- Package zip layout must match Factorio mod portal expectations.
+- Versioning should start at `0.1.0` for the first playable local build.

@@ -1,6 +1,6 @@
 # Architecture Notes
 
-Status: draft template, awaiting mod concept decisions.
+Status: initial direction recorded from operator answers on 2026-05-29.
 
 ## Current Repository Shape
 
@@ -9,6 +9,12 @@ Status: draft template, awaiting mod concept decisions.
 - `docs/`: planning, design, architecture, and checklist documents.
 
 Runtime mod files are not scaffolded yet.
+
+Expected first runtime shape:
+
+- `data.lua`: declare quality-module armor equipment, items, recipes, shortcut/custom input if needed.
+- `control.lua`: GUI lifecycle, quality crafting logic, equipment scanning, craft completion, and save/load hooks.
+- `locale/en/player-quality.cfg`: player-facing names, descriptions, GUI captions, and messages.
 
 ## Ownership Boundaries
 
@@ -27,39 +33,53 @@ Do not add cross-cutting runtime systems until the first feature proves they are
 
 ## Runtime State
 
-TBD.
+Preferred V1 state:
 
-Before adding persistent state, define:
+- Per-player GUI state: selected recipe, ingredient quality, and count.
+- Optional per-player craft queue only if real crafting time is implemented.
 
-- What data is stored.
-- Whether it is global, force-level, surface-level, entity-level, or per-player.
-- How it is initialized for new saves.
-- How it is migrated for existing saves.
-- How it is cleaned up when entities, players, forces, or surfaces are removed.
+Avoid persistent state for equipment effects; compute equipped quality-module chance from the current armor equipment grid when needed.
+
+If a custom crafting queue is implemented, store:
+
+- Player index.
+- Recipe name.
+- Ingredient quality name.
+- Count remaining.
+- Progress ticks.
+- Precomputed output plan only if needed for save/load stability.
+
+Do not store Lua objects in persistent state.
 
 ## Event Model
 
-TBD.
+Likely events:
 
-For each runtime event handler, record:
+- `on_gui_click`, `on_gui_selection_state_changed`, and related GUI events for the quality crafting UI.
+- `on_lua_shortcut` or a custom input for opening the UI.
+- `on_player_armor_inventory_changed`, `on_equipment_inserted`, and `on_equipment_removed` only if cached equipment state is needed.
+- `on_tick` only if a custom timed crafting queue is implemented.
+- `on_player_crafted_item` only if a later iteration modifies vanilla hand-crafting output.
 
-- Event name.
-- Why the event is needed.
-- Expected frequency.
-- Guard conditions.
-- Performance risk.
-- Multiplayer considerations.
+Avoid frequent inventory scans. Scan equipment on demand or in response to equipment/armor events.
 
 ## Prototype Model
 
-TBD.
+Expected custom prototypes:
 
-For each prototype change, record:
+- `player-quality-quality-module-equipment`
+- `player-quality-quality-module-2-equipment`
+- `player-quality-quality-module-3-equipment`
+- Matching item prototypes.
+- Matching recipes.
+- Optional shortcut/custom input for opening the UI.
 
-- Target prototype type and name.
-- Whether the mod creates, modifies, or removes data.
-- Compatibility risk with base game and other mods.
-- Whether the change is gated by a startup setting.
+Expected dependency on vanilla prototypes:
+
+- Vanilla quality modules supply source icon/effect semantics.
+- Vanilla armor equipment category should be used if possible so existing modular armor grids accept the equipment.
+
+Avoid modifying vanilla quality modules or armor grids unless testing proves it is required.
 
 ## Compatibility Practices
 
@@ -68,3 +88,4 @@ For each prototype change, record:
 - Avoid changing base prototypes unless the feature requires it and the compatibility risk is documented.
 - Keep migrations explicit once released saves can contain mod-owned state.
 - Treat multiplayer and headless behavior as first-class requirements when the feature touches runtime logic.
+- Prefer custom UI and custom equipment over patching native player crafting behavior globally.
