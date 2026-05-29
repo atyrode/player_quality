@@ -1,6 +1,6 @@
 # Development Checklist
 
-Status: V0.1.2 quick-test setup implemented on 2026-05-29.
+Status: V0.1.3 inventory-attached quality crafting panel implemented on 2026-05-29.
 
 ## Research
 
@@ -11,7 +11,7 @@ Status: V0.1.2 quick-test setup implemented on 2026-05-29.
 - [ ] Find one or two current reference mods if the feature touches a known pattern.
 - [x] Record implementation constraints in `docs/TECHNICAL_DIRECTION.md`.
 - [ ] Verify whether `quality` dependency alone is sufficient or whether `space-age` must be required.
-- [ ] Verify if the native player crafting GUI can be augmented.
+- [x] Verify a relative GUI can be anchored to the character inventory for a vanilla-adjacent panel.
 
 ## Local Prerequisites
 
@@ -38,7 +38,7 @@ Status: V0.1.2 quick-test setup implemented on 2026-05-29.
 - [x] Start a new save.
 - [ ] Add or craft quality-module armor equipment.
 - [ ] Insert the equipment into modular armor.
-- [ ] Open the Player Quality crafting UI.
+- [ ] Open the character inventory `Quality crafting` panel in a real client.
 - [ ] Craft one eligible recipe using normal ingredients.
 - [ ] Craft one eligible recipe using non-normal ingredients.
 - [x] Save and reload if runtime state exists.
@@ -72,6 +72,8 @@ Release channel decision: publish to the Factorio Mod Portal so in-game install/
 Portal result: V0.1.1 is published at `https://mods.factorio.com/mod/player_quality`.
 
 V0.1.2 adds `/player-quality-test-setup` so test saves can be prepared without a long `/c` command.
+
+V0.1.3 adds the character-inventory quality crafting panel, keeps `/player-quality` as a debug GUI, requires module energy, and enforces researched quality caps.
 
 ## Debugging Workflow
 

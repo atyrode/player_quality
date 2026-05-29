@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.3
+Date: 2026-05-29
+  Features:
+    - Added a player-facing Quality crafting panel anchored to the character inventory GUI.
+    - Kept Ctrl + Shift + Q, the shortcut button, and /player-quality as a debug GUI.
+    - Added debug buttons to give personal quality modules at the selected quality.
+    - Added a debug infinite-energy toggle for personal quality modules.
+  Changes:
+    - Personal quality modules now require stored armor-grid energy for quality crafting.
+    - The chance display now shows active next-quality chance and powered module count.
+    - Personal quality module item and equipment tooltips now expose quality-scaled chance and energy cost.
+    - Personal quality module recipes are synced from matching vanilla quality module technologies in existing saves.
+  Bugfixes:
+    - Crafted output feedback now uses rich item and quality icons instead of raw locale fallback keys.
+    - Quality crafting can no longer select or roll above qualities the force has unlocked.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.1.2
 Date: 2026-05-29
   Features:

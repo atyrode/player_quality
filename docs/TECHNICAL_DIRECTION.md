@@ -82,7 +82,7 @@ Likely V1 shape:
     `-- package.sh
 ```
 
-Current implementation matches this shape. The first runtime prototype uses a separate GUI and instant custom craft execution.
+Current implementation matches this shape. Normal play uses a relative GUI attached to the character inventory, debug tooling uses a separate GUI, and crafting currently executes instantly through custom script logic.
 
 ## Build And Package Direction
 
@@ -92,7 +92,7 @@ Likely eventual helpers:
 - `scripts/check.sh`: run syntax checks and lightweight packaging validation.
 - `scripts/release.sh`: publish a release only from clean, pushed source if release automation is needed.
 
-GitHub releases come first. Factorio mod portal packaging comes after the first locally validated build.
+GitHub releases and Factorio Mod Portal uploads are both used now: GitHub for direct zip fallback, Mod Portal for fast in-game updates.
 
 Current release direction:
 
@@ -121,6 +121,7 @@ Current local checks:
 - Factorio 2.0.76 headless successfully created and benchmark-loaded a new save with `quality`, `space-age`, and `player_quality` enabled, which validated data-stage loading, `control.lua` compilation, and save reload.
 - V0.1.1 also passed a temporary headless API smoke test covering the dot-call signatures for `LuaRecipe::has_category`, `LuaForce::is_quality_unlocked`, and `LuaItemPrototype::get_module_effects`.
 - V0.1.2 passed a temporary headless equipment-grid smoke test covering insertion of `player-quality-quality-module-3-equipment` into power armor.
+- V0.1.3 passed a headless create/reload check with Factorio 2.0.76. A temporary helper mod also validated the `standalone_character_gui` right-side relative GUI anchor.
 
 ## Technical Risks
 
@@ -130,7 +131,6 @@ Current local checks:
 - GUI changes can conflict with player expectations or other mods if not scoped carefully.
 - Multiplayer behavior must be deterministic and avoid per-client-only assumptions.
 - `begin_crafting` only accepts `RecipeID`, not a documented recipe quality parameter, so quality ingredient selection likely requires custom crafting logic.
-- The native player crafting GUI may not expose a direct relative GUI target for injecting an ingredient quality selector.
-- Inert armor equipment needs a valid equipment prototype subtype; validate which subtype can be used without unwanted gameplay effects.
+- The native player crafting GUI may not expose every desired selector location; V0.1.3 uses a relative GUI attached to the standalone character GUI as the current vanilla-adjacent route.
+- Personal quality module equipment uses `battery-equipment` with a 1MJ buffer and 200kW input flow so energy state is visible and script-controllable.
 - Reimplementing recipe handling can get complex for fluids, multiple products, catalysts, recursive prerequisites, and unlock gating. V1 should restrict eligible recipes until each case is proven.
-- The first implementation uses `battery-equipment` with 1J capacity and 1W flow as an inert armor-grid carrier. Validate in-game that this has no meaningful side effect beyond occupying grid space.

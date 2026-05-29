@@ -1,6 +1,6 @@
 # Playtest Guide
 
-Status: V0.1.2 real-client playtest path.
+Status: V0.1.3 real-client playtest path.
 
 ## Release Channel
 
@@ -18,10 +18,10 @@ Fallback GitHub release page:
 https://github.com/atyrode/player_quality/releases/latest
 ```
 
-Direct V0.1.2 GitHub zip:
+Direct V0.1.3 GitHub zip:
 
 ```text
-https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip
+https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip
 ```
 
 ## Install
@@ -44,21 +44,21 @@ Linux:
 
 ```sh
 mkdir -p ~/.factorio/mods
-curl -L -o ~/.factorio/mods/player_quality_0.1.2.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip
+curl -L -o ~/.factorio/mods/player_quality_0.1.3.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:APPDATA\Factorio\mods"
-Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.2.zip"
+Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.3.zip"
 ```
 
 macOS:
 
 ```sh
 mkdir -p "$HOME/Library/Application Support/factorio/mods"
-curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.2.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.2.zip
+curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.3.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip
 ```
 
 You can also download the zip from the release page in a browser, then place it in the same mods folder.
@@ -86,13 +86,30 @@ If Factorio says this command is unknown, `Player Quality` is not enabled in the
 
 Then:
 
-1. Open the Player Quality GUI with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`.
-2. Confirm the equipped quality chance reads about `100.00%`.
-3. Select `iron stick`.
-4. Select `rare` ingredient quality.
-5. Set count to `100`.
-6. Click `Craft`.
-7. Confirm rare iron plates are consumed and rare or better iron sticks are produced.
+1. Open the character inventory.
+2. Confirm the attached `Quality crafting` panel appears.
+3. Confirm the next quality chance reads above `0.00%` and shows powered module count.
+4. Select `iron stick`.
+5. Select `rare` ingredient quality.
+6. Set count to `100`.
+7. Click `Craft`.
+8. Confirm rare iron plates are consumed and rare or better iron sticks are produced.
+
+The debug GUI is still available with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`. Use it to toggle infinite module energy or give yourself personal quality modules at the selected quality.
+
+Energy test:
+
+1. In the debug GUI, turn off `Debug: infinite module energy`.
+2. Remove or discharge the personal quality modules.
+3. Open the character inventory and confirm the next quality chance drops to `0.00%`.
+4. Attempt a quality craft and confirm the mod reports that personal quality modules need energy.
+
+Research gate test:
+
+1. Start a clean save without `/player-quality-test-setup`.
+2. Confirm only researched qualities appear in the ingredient-quality selector.
+3. Research the regular vanilla quality module technologies.
+4. Confirm the matching personal quality module recipes unlock.
 
 Also test the normal-quality path by selecting `normal` ingredient quality and crafting another batch.
 
@@ -102,9 +119,12 @@ Send:
 
 - Factorio version.
 - Whether the mod appeared in the Mods menu.
-- Whether the Player Quality GUI opened.
+- Whether the `Quality crafting` panel appeared when opening inventory.
+- Whether the debug GUI opened with `/player-quality`.
 - Whether `iron stick` appeared in the recipe selector.
 - Whether rare input crafting consumed the correct items.
 - What output qualities you received.
+- Whether unpowered modules blocked crafting.
+- Whether locked qualities stayed unavailable.
 - Any error text from the game.
 - The relevant part of `factorio-current.log` if Factorio reports a mod error.

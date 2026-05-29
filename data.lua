@@ -7,6 +7,14 @@ local equipment_specs = {
     item = MOD_PREFIX .. "quality-module-equipment",
     recipe = MOD_PREFIX .. "quality-module-equipment",
     technology = "quality-module",
+    quality_chance = "1.00%",
+    quality_values = {
+      normal = "1.00%",
+      uncommon = "1.30%",
+      rare = "1.60%",
+      epic = "1.90%",
+      legendary = "2.50%"
+    },
     order = "a[quality-module-equipment]-a[quality-module]",
     ingredients = {
       { type = "item", name = "quality-module", amount = 1 },
@@ -20,6 +28,14 @@ local equipment_specs = {
     item = MOD_PREFIX .. "quality-module-2-equipment",
     recipe = MOD_PREFIX .. "quality-module-2-equipment",
     technology = "quality-module-2",
+    quality_chance = "2.00%",
+    quality_values = {
+      normal = "2.00%",
+      uncommon = "2.60%",
+      rare = "3.20%",
+      epic = "3.80%",
+      legendary = "5.00%"
+    },
     order = "a[quality-module-equipment]-b[quality-module-2]",
     ingredients = {
       { type = "item", name = "quality-module-2", amount = 1 },
@@ -33,6 +49,14 @@ local equipment_specs = {
     item = MOD_PREFIX .. "quality-module-3-equipment",
     recipe = MOD_PREFIX .. "quality-module-3-equipment",
     technology = "quality-module-3",
+    quality_chance = "2.50%",
+    quality_values = {
+      normal = "2.50%",
+      uncommon = "3.25%",
+      rare = "4.00%",
+      epic = "4.75%",
+      legendary = "6.25%"
+    },
     order = "a[quality-module-equipment]-c[quality-module-3]",
     ingredients = {
       { type = "item", name = "quality-module-3", amount = 1 },
@@ -66,6 +90,26 @@ local function module_icons(module_name)
   }
 end
 
+local function quality_tooltip_fields(spec)
+  return {
+    {
+      name = { "player-quality.quality-chance" },
+      value = spec.quality_chance,
+      quality_values = spec.quality_values,
+      show_in_tooltip = true,
+      show_in_factoriopedia = true,
+      order = 40
+    },
+    {
+      name = { "player-quality.energy-per-craft" },
+      value = "10 kJ",
+      show_in_tooltip = true,
+      show_in_factoriopedia = true,
+      order = 41
+    }
+  }
+end
+
 local prototypes = {}
 
 for _, spec in pairs(equipment_specs) do
@@ -86,11 +130,11 @@ for _, spec in pairs(equipment_specs) do
     },
     energy_source = {
       type = "electric",
-      buffer_capacity = "1J",
-      input_flow_limit = "1W",
-      output_flow_limit = "1W",
+      buffer_capacity = "1MJ",
+      input_flow_limit = "200kW",
       usage_priority = "tertiary"
     },
+    custom_tooltip_fields = quality_tooltip_fields(spec),
     take_result = spec.item,
     categories = { "armor" }
   })
@@ -102,6 +146,7 @@ for _, spec in pairs(equipment_specs) do
     subgroup = "equipment",
     order = spec.order,
     stack_size = 20,
+    custom_tooltip_fields = quality_tooltip_fields(spec),
     place_as_equipment_result = spec.equipment
   })
 

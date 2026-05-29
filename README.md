@@ -10,7 +10,8 @@ The target mod lets players put quality-module-style equipment into modular armo
 - Planning and tracking documents: [docs/](docs/).
 - Factorio mod scaffold: `info.json`, `data.lua`, `control.lua`, and `locale/`.
 - Factorio changelog: `changelog.txt`.
-- Current prototype: personal quality-module armor equipment plus an instant Player Quality crafting GUI for simple hand-craftable item recipes.
+- Current prototype: personal quality-module armor equipment plus an instant `Quality crafting` panel attached to the character inventory GUI for simple hand-craftable item recipes.
+- Debug tools remain available through `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`.
 
 ## Development
 
@@ -86,19 +87,19 @@ The full install and instant new-save setup path is in [docs/PLAYTEST.md](docs/P
 /player-quality-test-setup
 ```
 
-5. Open the Player Quality GUI with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`.
+5. Open the character inventory to use the `Quality crafting` panel. Use `Ctrl + Shift + Q`, the shortcut button, or `/player-quality` only for the debug GUI.
 6. Select an unlocked simple recipe such as iron stick, choose `rare` ingredient quality, set a count, and craft.
 7. Confirm rare iron plates are consumed and the output is rare or better.
 
-The first package has been smoke-tested with Factorio 2.0.76 headless by creating and reloading a save with `quality`, `space-age`, and `player_quality` enabled. The GUI still needs a real client playtest.
+V0.1.3 has been smoke-tested with Factorio 2.0.76 headless by creating and reloading a save with `quality`, `space-age`, and `player_quality` enabled. A temporary helper mod also validated the character-inventory relative GUI anchor. The actual GUI still needs a real client playtest.
 
 ## Prototype Limits
 
-- The Player Quality GUI is separate from Factorio's native crafting menu.
+- The quality crafting panel is attached to the character inventory GUI, but it still uses mod-owned instant crafting rather than Factorio's native crafting queue.
 - Crafting is instant for the first proof of concept.
 - Only unlocked, simple item recipes in the `crafting` category are listed.
 - Recipes with fluids, multiple products, probabilistic products, or non-item ingredients are skipped.
-- The current armor equipment is implemented as 1x1 battery equipment with negligible storage only so it can live in a standard armor grid.
+- The current armor equipment is implemented as 1x1 battery equipment so it can live in a standard armor grid and consume charge per quality craft.
 
 ## Documents
 

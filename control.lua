@@ -1,14 +1,20 @@
 local MOD_PREFIX = "player-quality-"
 
 local GUI = {
-  frame = MOD_PREFIX .. "frame",
+  debug_frame = MOD_PREFIX .. "debug-frame",
+  crafting_panel = MOD_PREFIX .. "crafting-panel",
   recipe_dropdown = MOD_PREFIX .. "recipe-dropdown",
   quality_dropdown = MOD_PREFIX .. "quality-dropdown",
   count_textfield = MOD_PREFIX .. "count-textfield",
   status_label = MOD_PREFIX .. "status-label",
   chance_label = MOD_PREFIX .. "chance-label",
   craft_button = MOD_PREFIX .. "craft-button",
-  close_button = MOD_PREFIX .. "close-button"
+  close_button = MOD_PREFIX .. "close-button",
+  infinite_energy_checkbox = MOD_PREFIX .. "infinite-energy-checkbox",
+  give_module_1_button = MOD_PREFIX .. "give-module-1-button",
+  give_module_2_button = MOD_PREFIX .. "give-module-2-button",
+  give_module_3_button = MOD_PREFIX .. "give-module-3-button",
+  status_button = MOD_PREFIX .. "status-button"
 }
 
 local EQUIPMENT_TO_MODULE = {
@@ -17,14 +23,34 @@ local EQUIPMENT_TO_MODULE = {
   [MOD_PREFIX .. "quality-module-3-equipment"] = "quality-module-3"
 }
 
+local GIVE_MODULE_BUTTONS = {
+  [GUI.give_module_1_button] = MOD_PREFIX .. "quality-module-equipment",
+  [GUI.give_module_2_button] = MOD_PREFIX .. "quality-module-2-equipment",
+  [GUI.give_module_3_button] = MOD_PREFIX .. "quality-module-3-equipment"
+}
+
+local MODULE_UNLOCKS = {
+  {
+    technology = "quality-module",
+    recipe = MOD_PREFIX .. "quality-module-equipment"
+  },
+  {
+    technology = "quality-module-2",
+    recipe = MOD_PREFIX .. "quality-module-2-equipment"
+  },
+  {
+    technology = "quality-module-3",
+    recipe = MOD_PREFIX .. "quality-module-3-equipment"
+  }
+}
+
+local ENERGY_PER_MODULE_PER_CRAFT = 10000
+
 local function ensure_storage()
   storage.player_quality = storage.player_quality or {}
   storage.player_quality.players = storage.player_quality.players or {}
   storage.player_quality.rng = storage.player_quality.rng or game.create_random_generator()
 end
-
-script.on_init(ensure_storage)
-script.on_configuration_changed(ensure_storage)
 
 local function get_player_state(player)
   ensure_storage()
@@ -34,6 +60,32 @@ end
 
 local function format_percent(value)
   return string.format("%.2f", value * 100)
+end
+
+local function item_localised_name(name)
+  local item = prototypes.item[name]
+  if item and item.localised_name then
+    return item.localised_name
+  end
+
+  return { "item-name." .. name }
+end
+
+local function quality_localised_name(name)
+  local quality = prototypes.quality[name]
+  if quality and quality.localised_name then
+    return quality.localised_name
+  end
+
+  return { "quality-name." .. name }
+end
+
+local function item_tag(name, quality)
+  if quality and quality ~= "normal" then
+    return "[quality=" .. quality .. "][item=" .. name .. "]"
+  end
+
+  return "[item=" .. name .. "]"
 end
 
 local function get_player_armor_grid(player)
@@ -62,25 +114,72 @@ local function quality_name_from_object(quality)
   return "normal"
 end
 
-local function get_equipped_quality_chance(player)
+local function get_equipped_quality_modules(player, count)
   local grid = get_player_armor_grid(player)
   if not grid then
-    return 0
+    return {}
   end
 
-  local chance = 0
+  local state = get_player_state(player)
+  local required_energy = ENERGY_PER_MODULE_PER_CRAFT * (count or 1)
+  local modules = {}
+
   for _, equipment in pairs(grid.equipment) do
     local module_name = EQUIPMENT_TO_MODULE[equipment.name]
     local module = module_name and prototypes.item[module_name]
     if module and module.get_module_effects then
       local effects = module.get_module_effects(quality_name_from_object(equipment.quality))
       if effects and effects.quality then
-        chance = chance + effects.quality
+        table.insert(modules, {
+          equipment = equipment,
+          module_name = module_name,
+          chance = math.max(effects.quality, 0),
+          powered = state.infinite_energy or (equipment.energy or 0) >= required_energy
+        })
       end
     end
   end
 
-  return math.max(chance, 0)
+  return modules
+end
+
+local function get_equipped_quality_chance(player, count)
+  local total = 0
+  local active = 0
+  local total_modules = 0
+  local active_modules = 0
+
+  for _, module in pairs(get_equipped_quality_modules(player, count)) do
+    total = total + module.chance
+    total_modules = total_modules + 1
+    if module.powered then
+      active = active + module.chance
+      active_modules = active_modules + 1
+    end
+  end
+
+  return {
+    total = math.max(total, 0),
+    active = math.max(active, 0),
+    total_modules = total_modules,
+    active_modules = active_modules
+  }
+end
+
+local function sync_force_recipe_unlocks(force)
+  for _, unlock in pairs(MODULE_UNLOCKS) do
+    local recipe = force.recipes[unlock.recipe]
+    local technology = force.technologies[unlock.technology]
+    if recipe and technology and technology.researched then
+      recipe.enabled = true
+    end
+  end
+end
+
+local function sync_all_force_recipe_unlocks()
+  for _, force in pairs(game.forces) do
+    sync_force_recipe_unlocks(force)
+  end
 end
 
 local function is_quality_unlocked(force, quality_name)
@@ -213,6 +312,39 @@ local function get_recipe_options(player)
   return options
 end
 
+local function reset_player_options(player)
+  local state = get_player_state(player)
+  local recipes = get_recipe_options(player)
+  local qualities = get_quality_options(player.force)
+
+  state.recipe_names = {}
+  state.quality_names = {}
+
+  local recipe_items = {}
+  for _, recipe in pairs(recipes) do
+    table.insert(state.recipe_names, recipe.name)
+    table.insert(recipe_items, recipe.localised_name)
+  end
+
+  local quality_items = {}
+  for _, quality in pairs(qualities) do
+    table.insert(state.quality_names, quality.name)
+    table.insert(quality_items, quality.localised_name)
+  end
+
+  if not state.recipe_names[state.selected_recipe_index or 1] then
+    state.selected_recipe_index = #state.recipe_names > 0 and 1 or 0
+  end
+
+  if not state.quality_names[state.selected_quality_index or 1] then
+    state.selected_quality_index = 1
+  end
+
+  state.count = state.count or "1"
+
+  return recipe_items, quality_items
+end
+
 local function get_selected_recipe(player)
   local state = get_player_state(player)
   local selected_index = state.selected_recipe_index or 1
@@ -228,11 +360,24 @@ local function get_selected_quality(player)
   local state = get_player_state(player)
   local selected_index = state.selected_quality_index or 1
   local quality_name = state.quality_names and state.quality_names[selected_index]
-  if quality_name then
+  if quality_name and is_quality_unlocked(player.force, quality_name) then
     return quality_name
   end
 
   return "normal"
+end
+
+local function get_selected_quality_next_probability(player)
+  local current = prototypes.quality[get_selected_quality(player)] or prototypes.quality.normal
+  if not current or not current.next then
+    return 0
+  end
+
+  if not is_quality_unlocked(player.force, current.next.name) then
+    return 0
+  end
+
+  return current.next_probability or 0
 end
 
 local function get_count(player)
@@ -251,71 +396,50 @@ local function get_count(player)
 end
 
 local function set_status(player, message)
-  local frame = player.gui.screen[GUI.frame]
-  if frame and frame.valid and frame[GUI.status_label] then
-    frame[GUI.status_label].caption = message
+  for _, root in pairs({ player.gui.screen[GUI.debug_frame], player.gui.relative[GUI.crafting_panel] }) do
+    if root and root.valid and root[GUI.status_label] then
+      root[GUI.status_label].caption = message
+    end
   end
 end
 
 local function refresh_chance_label(player)
-  local frame = player.gui.screen[GUI.frame]
-  if not frame or not frame.valid or not frame[GUI.chance_label] then
-    return
-  end
+  local status = get_equipped_quality_chance(player, get_count(player))
+  local next_probability = get_selected_quality_next_probability(player)
+  local active_roll_chance = math.min(status.active * next_probability, 1)
+  local total_roll_chance = math.min(status.total * next_probability, 1)
 
-  frame[GUI.chance_label].caption = {
-    "player-quality.equipped-quality-chance",
-    format_percent(get_equipped_quality_chance(player))
-  }
+  for _, root in pairs({ player.gui.screen[GUI.debug_frame], player.gui.relative[GUI.crafting_panel] }) do
+    if root and root.valid and root[GUI.chance_label] then
+      root[GUI.chance_label].caption = {
+        "player-quality.equipped-quality-chance",
+        format_percent(active_roll_chance),
+        format_percent(total_roll_chance),
+        status.active_modules,
+        status.total_modules
+      }
+    end
+  end
 end
 
-local function close_gui(player)
-  local frame = player.gui.screen[GUI.frame]
+local function close_debug_gui(player)
+  local frame = player.gui.screen[GUI.debug_frame]
   if frame and frame.valid then
     frame.destroy()
   end
 end
 
-local function open_gui(player)
-  close_gui(player)
-
+local function add_crafting_controls(root, player, show_debug_controls)
   local state = get_player_state(player)
-  local recipes = get_recipe_options(player)
-  local qualities = get_quality_options(player.force)
+  local recipe_items, quality_items = reset_player_options(player)
 
-  state.recipe_names = {}
-  state.quality_names = {}
-  state.selected_recipe_index = 1
-  state.selected_quality_index = 1
-  state.count = state.count or "1"
-
-  local recipe_items = {}
-  for _, recipe in pairs(recipes) do
-    table.insert(state.recipe_names, recipe.name)
-    table.insert(recipe_items, recipe.localised_name)
-  end
-
-  local quality_items = {}
-  for _, quality in pairs(qualities) do
-    table.insert(state.quality_names, quality.name)
-    table.insert(quality_items, quality.localised_name)
-  end
-
-  local frame = player.gui.screen.add({
-    type = "frame",
-    name = GUI.frame,
-    direction = "vertical",
-    caption = { "player-quality.gui-title" }
-  })
-  frame.auto_center = true
-
-  frame.add({
+  root.add({
     type = "label",
     name = GUI.chance_label,
-    caption = { "player-quality.equipped-quality-chance", format_percent(get_equipped_quality_chance(player)) }
+    caption = { "player-quality.equipped-quality-chance", "0.00", "0.00", 0, 0 }
   })
 
-  local recipe_flow = frame.add({
+  local recipe_flow = root.add({
     type = "flow",
     direction = "horizontal"
   })
@@ -327,10 +451,10 @@ local function open_gui(player)
     type = "drop-down",
     name = GUI.recipe_dropdown,
     items = recipe_items,
-    selected_index = #recipe_items > 0 and 1 or 0
+    selected_index = state.selected_recipe_index or 0
   })
 
-  local quality_flow = frame.add({
+  local quality_flow = root.add({
     type = "flow",
     direction = "horizontal"
   })
@@ -342,10 +466,10 @@ local function open_gui(player)
     type = "drop-down",
     name = GUI.quality_dropdown,
     items = quality_items,
-    selected_index = #quality_items > 0 and 1 or 0
+    selected_index = state.selected_quality_index or 1
   })
 
-  local count_flow = frame.add({
+  local count_flow = root.add({
     type = "flow",
     direction = "horizontal"
   })
@@ -362,13 +486,42 @@ local function open_gui(player)
     allow_negative = false
   })
 
-  frame.add({
+  if show_debug_controls then
+    root.add({
+      type = "checkbox",
+      name = GUI.infinite_energy_checkbox,
+      caption = { "player-quality.infinite-energy" },
+      state = state.infinite_energy or false
+    })
+
+    local give_flow = root.add({
+      type = "flow",
+      direction = "horizontal"
+    })
+    give_flow.add({
+      type = "button",
+      name = GUI.give_module_1_button,
+      caption = { "player-quality.give-module-1" }
+    })
+    give_flow.add({
+      type = "button",
+      name = GUI.give_module_2_button,
+      caption = { "player-quality.give-module-2" }
+    })
+    give_flow.add({
+      type = "button",
+      name = GUI.give_module_3_button,
+      caption = { "player-quality.give-module-3" }
+    })
+  end
+
+  root.add({
     type = "label",
     name = GUI.status_label,
     caption = #recipe_items > 0 and { "player-quality.ready" } or { "player-quality.no-recipes" }
   })
 
-  local button_flow = frame.add({
+  local button_flow = root.add({
     type = "flow",
     direction = "horizontal"
   })
@@ -377,13 +530,61 @@ local function open_gui(player)
     name = GUI.craft_button,
     caption = { "player-quality.craft" }
   })
-  button_flow.add({
-    type = "button",
-    name = GUI.close_button,
-    caption = { "player-quality.close" }
-  })
 
+  if show_debug_controls then
+    button_flow.add({
+      type = "button",
+      name = GUI.close_button,
+      caption = { "player-quality.close" }
+    })
+  end
+
+  refresh_chance_label(player)
+end
+
+local function open_debug_gui(player)
+  close_debug_gui(player)
+
+  local frame = player.gui.screen.add({
+    type = "frame",
+    name = GUI.debug_frame,
+    direction = "vertical",
+    caption = { "player-quality.debug-gui-title" }
+  })
+  frame.auto_center = true
+
+  add_crafting_controls(frame, player, true)
   player.opened = frame
+end
+
+local function close_crafting_panel(player)
+  local panel = player.gui.relative[GUI.crafting_panel]
+  if panel and panel.valid then
+    panel.destroy()
+  end
+end
+
+local function open_crafting_panel(player)
+  close_crafting_panel(player)
+
+  local ok, panel = pcall(function()
+    return player.gui.relative.add({
+      type = "frame",
+      name = GUI.crafting_panel,
+      direction = "vertical",
+      caption = { "player-quality.crafting-panel-title" },
+      anchor = {
+        gui = defines.relative_gui_type.standalone_character_gui,
+        position = defines.relative_gui_position.right
+      }
+    })
+  end)
+
+  if not ok or not panel then
+    return
+  end
+
+  add_crafting_controls(panel, player, false)
 end
 
 local function roll_output_quality(base_quality_name, quality_chance, force)
@@ -437,6 +638,20 @@ local function remove_ingredients(inventory, ingredients, quality, count)
   end
 end
 
+local function consume_quality_energy(player, count)
+  local state = get_player_state(player)
+  if state.infinite_energy then
+    return
+  end
+
+  local energy = ENERGY_PER_MODULE_PER_CRAFT * count
+  for _, module in pairs(get_equipped_quality_modules(player, count)) do
+    if module.powered then
+      module.equipment.energy = math.max(module.equipment.energy - energy, 0)
+    end
+  end
+end
+
 local function insert_or_spill(player, stack)
   local inserted = player.insert(stack)
   local remaining = stack.count - inserted
@@ -465,13 +680,23 @@ local function craft_selected(player)
   end
 
   local quality = get_selected_quality(player)
-  local chance = get_equipped_quality_chance(player)
-  if chance <= 0 then
-    set_status(player, { "player-quality.no-equipment" })
+  if not is_quality_unlocked(player.force, quality) then
+    set_status(player, { "player-quality.quality-locked", quality_localised_name(quality) })
     return
   end
 
   local count = get_count(player)
+  local chance = get_equipped_quality_chance(player, count)
+  if chance.total_modules <= 0 then
+    set_status(player, { "player-quality.no-equipment" })
+    return
+  end
+
+  if chance.active <= 0 then
+    set_status(player, { "player-quality.no-powered-equipment" })
+    return
+  end
+
   local inventory = player.get_main_inventory()
   if not inventory or not inventory.valid then
     set_status(player, { "player-quality.no-inventory" })
@@ -484,9 +709,9 @@ local function craft_selected(player)
     if available < needed then
       set_status(player, {
         "player-quality.missing-ingredient",
-        { "item-name." .. ingredient.name },
+        item_localised_name(ingredient.name),
         needed,
-        { "quality-name." .. quality },
+        quality_localised_name(quality),
         available
       })
       return
@@ -494,35 +719,57 @@ local function craft_selected(player)
   end
 
   remove_ingredients(inventory, simple_recipe.ingredients, quality, count)
+  consume_quality_energy(player, count)
 
   local rolled = {}
   for _ = 1, count do
-    local output_quality = roll_output_quality(quality, chance, player.force)
+    local output_quality = roll_output_quality(quality, chance.active, player.force)
     rolled[output_quality] = (rolled[output_quality] or 0) + simple_recipe.product.amount
   end
 
+  local result_parts = {}
   for output_quality, amount in pairs(rolled) do
     insert_or_spill(player, {
       name = simple_recipe.product.name,
       quality = output_quality,
       count = amount
     })
+    table.insert(result_parts, item_tag(simple_recipe.product.name, output_quality) .. " x" .. amount)
   end
+  table.sort(result_parts)
 
   refresh_chance_label(player)
   set_status(player, {
     "player-quality.crafted",
     count,
-    simple_recipe.product.amount * count,
-    { "item-name." .. simple_recipe.product.name }
+    table.concat(result_parts, "  ")
   })
 end
 
-local function toggle_gui(player)
-  if player.gui.screen[GUI.frame] then
-    close_gui(player)
+local function toggle_debug_gui(player)
+  if player.gui.screen[GUI.debug_frame] then
+    close_debug_gui(player)
   else
-    open_gui(player)
+    open_debug_gui(player)
+  end
+end
+
+local function give_debug_module(player, item_name)
+  local quality = get_selected_quality(player)
+  local inserted = player.insert({
+    name = item_name,
+    quality = quality,
+    count = 1
+  })
+
+  if inserted > 0 then
+    set_status(player, {
+      "player-quality.gave-module",
+      item_tag(item_name, quality),
+      quality_localised_name(quality)
+    })
+  else
+    set_status(player, { "player-quality.no-inventory-space" })
   end
 end
 
@@ -562,13 +809,17 @@ local function setup_test_player(player)
 
   for _ = 1, 40 do
     local ok, equipment = pcall(function()
-      return grid.put({ name = MOD_PREFIX .. "quality-module-3-equipment" })
+      return grid.put({
+        name = MOD_PREFIX .. "quality-module-3-equipment",
+        quality = "rare"
+      })
     end)
 
     if not ok or not equipment then
       player.print({ "player-quality.test-setup-equipment-failed" })
       return
     end
+    equipment.energy = equipment.max_energy or 1000000
   end
 
   player.insert({ name = "iron-plate", count = 1000 })
@@ -581,7 +832,7 @@ end
 script.on_event(MOD_PREFIX .. "toggle-gui", function(event)
   local player = game.get_player(event.player_index)
   if player then
-    toggle_gui(player)
+    toggle_debug_gui(player)
   end
 end)
 
@@ -592,7 +843,18 @@ script.on_event(defines.events.on_lua_shortcut, function(event)
 
   local player = game.get_player(event.player_index)
   if player then
-    toggle_gui(player)
+    toggle_debug_gui(player)
+  end
+end)
+
+script.on_event(defines.events.on_gui_opened, function(event)
+  local player = game.get_player(event.player_index)
+  if not player then
+    return
+  end
+
+  if event.gui_type == defines.gui_type.controller then
+    open_crafting_panel(player)
   end
 end)
 
@@ -608,6 +870,7 @@ script.on_event(defines.events.on_gui_selection_state_changed, function(event)
   elseif event.element.name == GUI.quality_dropdown then
     state.selected_quality_index = event.element.selected_index
   end
+  refresh_chance_label(player)
 end)
 
 script.on_event(defines.events.on_gui_text_changed, function(event)
@@ -618,6 +881,20 @@ script.on_event(defines.events.on_gui_text_changed, function(event)
 
   if event.element.name == GUI.count_textfield then
     get_player_state(player).count = event.element.text
+    refresh_chance_label(player)
+  end
+end)
+
+script.on_event(defines.events.on_gui_checked_state_changed, function(event)
+  local player = game.get_player(event.player_index)
+  if not player or not event.element or not event.element.valid then
+    return
+  end
+
+  if event.element.name == GUI.infinite_energy_checkbox then
+    get_player_state(player).infinite_energy = event.element.state
+    refresh_chance_label(player)
+    set_status(player, { "player-quality.ready" })
   end
 end)
 
@@ -627,23 +904,31 @@ script.on_event(defines.events.on_gui_click, function(event)
     return
   end
 
-  if event.element.name == GUI.close_button then
-    close_gui(player)
+  local give_item = GIVE_MODULE_BUTTONS[event.element.name]
+  if give_item then
+    give_debug_module(player, give_item)
+  elseif event.element.name == GUI.close_button then
+    close_debug_gui(player)
   elseif event.element.name == GUI.craft_button then
     craft_selected(player)
   end
 end)
 
 script.on_event(defines.events.on_gui_closed, function(event)
-  if event.element and event.element.valid and event.element.name == GUI.frame then
+  if event.element and event.element.valid and event.element.name == GUI.debug_frame then
     event.element.destroy()
+  elseif event.gui_type == defines.gui_type.controller then
+    local player = game.get_player(event.player_index)
+    if player then
+      close_crafting_panel(player)
+    end
   end
 end)
 
 commands.add_command("player-quality", { "player-quality.command-help" }, function(event)
   local player = event.player_index and game.get_player(event.player_index)
   if player then
-    toggle_gui(player)
+    toggle_debug_gui(player)
   end
 end)
 
@@ -651,5 +936,29 @@ commands.add_command("player-quality-test-setup", { "player-quality.test-setup-c
   local player = event.player_index and game.get_player(event.player_index)
   if player then
     setup_test_player(player)
+  end
+end)
+
+script.on_init(function()
+  ensure_storage()
+  sync_all_force_recipe_unlocks()
+end)
+
+script.on_configuration_changed(function()
+  ensure_storage()
+  sync_all_force_recipe_unlocks()
+end)
+
+script.on_event(defines.events.on_research_finished, function(event)
+  sync_force_recipe_unlocks(event.research.force)
+
+  for _, player in pairs(event.research.force.players) do
+    if player.connected then
+      close_crafting_panel(player)
+      open_crafting_panel(player)
+      if player.gui.screen[GUI.debug_frame] then
+        open_debug_gui(player)
+      end
+    end
   end
 end)

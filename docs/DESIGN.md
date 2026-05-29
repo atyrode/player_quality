@@ -12,7 +12,7 @@ Core loop:
 
 - Craft or obtain quality-module armor equipment.
 - Insert it into modular armor.
-- Open the Player Quality crafting UI.
+- Open the character inventory and use the attached `Quality crafting` panel.
 - Pick recipe, ingredient quality, and count.
 - Craft using exact-quality ingredients.
 - Output quality is selected ingredient quality or better, based on equipped module chance.
@@ -29,6 +29,7 @@ Balance intent:
 - Equipped module tier and equipment item quality should matter.
 - The output formula should follow vanilla quality rules instead of inventing a stronger shortcut.
 - V1 should avoid convenience features that bypass ingredient quality requirements.
+- Crafting with personal quality modules should require module energy unless debug infinite energy is explicitly enabled.
 
 ## Settings Direction
 
@@ -42,28 +43,35 @@ Possible later settings:
 
 ## UI And Controls
 
-V1 should start with a mod-owned Player Quality crafting GUI.
+V1 uses a mod-owned `Quality crafting` panel anchored to the character inventory GUI. The older free-floating window remains as a debug GUI only.
 
 Expected controls:
 
-- Open button or shortcut.
 - Recipe selector.
 - Ingredient quality selector.
 - Count selector.
 - Craft button.
+- Active next-quality chance and powered-module count.
 - Clear feedback for missing exact-quality ingredients.
 - Clear feedback when no quality-module equipment is installed.
+- Clear feedback when installed modules are unpowered.
 
 Preferred later UX:
 
 - Show ingredient quality controls near the native player crafting menu if Factorio supports it cleanly.
 
+Debug controls:
+
+- `Ctrl + Shift + Q`, the shortcut button, and `/player-quality` open the debug GUI.
+- The debug GUI can enable infinite module energy and give personal quality modules for testing.
+
 Current prototype behavior:
 
 - Crafting is instant.
 - The GUI lists simple unlocked item recipes in the `crafting` category.
+- The ingredient-quality selector lists only qualities unlocked by the player's force.
 - The GUI skips recipes with fluids, non-item ingredients, multiple products, probabilistic products, or no ingredients.
-- Output upgrade rolls use equipped quality chance multiplied by each current quality tier's `next_probability`.
+- Output upgrade rolls use active equipped quality chance multiplied by each current quality tier's `next_probability`, and stop before locked qualities.
 
 ## Terminology
 

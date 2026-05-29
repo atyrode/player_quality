@@ -1,6 +1,6 @@
 # Requirements
 
-Status: initial direction recorded from operator answers on 2026-05-29.
+Status: V0.1.3 requirements snapshot on 2026-05-29.
 
 ## Functional Requirements
 
@@ -8,11 +8,15 @@ Status: initial direction recorded from operator answers on 2026-05-29.
 - Quality-module equipment can be inserted into modular armor grids.
 - When a player has quality-module equipment installed, the mod exposes a quality hand-crafting interface.
 - The interface lets the player choose an eligible recipe, ingredient quality, and craft count.
+- The player-facing quality crafting interface should be attached to the character inventory/crafting workflow when possible.
 - Ingredient quality is exact, matching vanilla quality-machine behavior: all item ingredients must be available at the selected quality.
+- Ingredient quality choices must be limited to qualities unlocked by the player's force.
 - Fluid-only recipes and recipes with fluid ingredients are out of V1 unless a direct player-crafting path is proven.
 - The output base quality is the selected ingredient quality.
 - Equipped quality-module equipment contributes quality chance according to the corresponding vanilla quality module and the equipment item's own quality.
 - The output quality roll should match Factorio quality behavior: roll once using total quality chance; if upgraded, repeat further upgrades with the game's 10% follow-up chance until the roll fails or the maximum unlocked quality is reached.
+- Equipped personal quality modules must have stored energy to contribute to quality crafting.
+- Personal quality module recipes must unlock with the matching vanilla quality module technologies, including when added to an existing save.
 - Multiplayer should work out of the box by keeping all state in deterministic runtime script state.
 
 ## User Experience Requirements
@@ -21,7 +25,7 @@ Status: initial direction recorded from operator answers on 2026-05-29.
 - New controls, shortcuts, alerts, or GUI surfaces must be predictable and not compete with base-game workflows.
 - Settings should exist only when they change meaningful behavior.
 - The long-term preferred UX is for ingredient quality controls to feel close to assembler recipe quality controls.
-- V1 may use a separate mod-owned GUI if Factorio does not allow adding controls directly into the native player crafting menu.
+- V1 uses a mod-owned relative GUI next to the character inventory. Free-floating GUI controls are debug-only.
 
 ## Compatibility Requirements
 

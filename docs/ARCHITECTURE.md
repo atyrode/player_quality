@@ -9,7 +9,7 @@ Status: initial direction recorded from operator answers on 2026-05-29.
 - `docs/`: planning, design, architecture, and checklist documents.
 - `info.json`: mod metadata and dependencies.
 - `data.lua`: quality-module equipment, items, recipes, shortcut, and keybind prototypes.
-- `control.lua`: Player Quality GUI, equipment quality chance scan, ingredient removal, quality rolls, and output insertion.
+- `control.lua`: character-inventory quality crafting panel, debug GUI, equipment quality chance scan, ingredient removal, energy consumption, quality rolls, and output insertion.
 - `locale/en/player-quality.cfg`: English names, descriptions, GUI text, and command help.
 - `changelog.txt`: Factorio-facing release notes.
 - `scripts/`: lightweight check and package helpers.
@@ -39,7 +39,7 @@ Do not add cross-cutting runtime systems until the first feature proves they are
 
 Preferred V1 state:
 
-- Per-player GUI state: selected recipe, ingredient quality, and count.
+- Per-player GUI state: selected recipe, ingredient quality, count, and debug infinite-energy toggle.
 - Optional per-player craft queue only if real crafting time is implemented.
 
 Avoid persistent state for equipment effects; compute equipped quality-module chance from the current armor equipment grid when needed.
@@ -60,7 +60,9 @@ Do not store Lua objects in persistent state.
 Likely events:
 
 - `on_gui_click`, `on_gui_selection_state_changed`, and related GUI events for the quality crafting UI.
-- `on_lua_shortcut` or a custom input for opening the UI.
+- `on_gui_opened` and relative GUI anchoring for the character-inventory `Quality crafting` panel.
+- `on_lua_shortcut` or a custom input for opening the debug GUI.
+- `on_research_finished` and configuration sync for retroactive personal quality module recipe unlocks.
 - `on_player_armor_inventory_changed`, `on_equipment_inserted`, and `on_equipment_removed` only if cached equipment state is needed.
 - `on_tick` only if a custom timed crafting queue is implemented.
 - `on_player_crafted_item` only if a later iteration modifies vanilla hand-crafting output.
@@ -76,7 +78,7 @@ Expected custom prototypes:
 - `player-quality-quality-module-3-equipment`
 - Matching item prototypes.
 - Matching recipes.
-- Optional shortcut/custom input for opening the UI.
+- Optional shortcut/custom input for opening the debug UI.
 
 Expected dependency on vanilla prototypes:
 
@@ -87,10 +89,11 @@ Avoid modifying vanilla quality modules or armor grids unless testing proves it 
 
 Current implementation details:
 
-- The equipment prototypes are 1x1 `battery-equipment` with 1J capacity and 1W flow so they can be inserted into standard armor grids while adding no meaningful power benefit.
+- The equipment prototypes are 1x1 `battery-equipment` with a 1MJ buffer and 200kW input flow so they can be inserted into standard armor grids and spend charge on quality crafting.
 - Recipes consume the matching vanilla quality module plus a small amount of circuits and batteries.
-- Recipes are unlocked from the matching vanilla quality module technologies when those technologies exist.
-- Runtime quality rolls read the equipped module item's quality-scaled `quality` effect, then follow the prototype quality chain with `current.next_probability` as the vanilla multiplier.
+- Recipes are unlocked from the matching vanilla quality module technologies when those technologies exist; runtime sync also enables them in existing saves where those technologies were already researched.
+- Runtime quality rolls read the equipped module item's quality-scaled `quality` effect, require each module to have enough stored energy for the requested craft count, then follow the prototype quality chain with `current.next_probability` as the vanilla multiplier.
+- Runtime quality selection and upgrade rolls are capped by qualities unlocked by the player's force.
 
 ## Compatibility Practices
 
