@@ -1,6 +1,6 @@
 # Technical Direction
 
-Status: initial direction recorded from operator answers on 2026-05-29, with official API notes checked the same day.
+Status: V0.1.5 personal assembler direction recorded on 2026-05-29, with official API notes checked the same day.
 
 ## Current Research Snapshot
 
@@ -29,6 +29,7 @@ Official docs checked:
 - Module prototypes expose module effects, and item prototypes expose module effects by quality: https://lua-api.factorio.com/latest/prototypes/ModulePrototype.html
 - `LuaQualityPrototype::next` and `next_probability` expose the vanilla quality roll chain: https://lua-api.factorio.com/latest/classes/LuaQualityPrototype.html
 - `LuaInventory::get_item_count` accepts item-with-quality filters for exact-quality ingredient checks: https://lua-api.factorio.com/latest/classes/LuaInventory.html#get_item_count
+- `LuaEntity::get_recipe`, `set_recipe`, `get_output_inventory`, and `get_module_inventory` cover the linked assembler runtime surface: https://lua-api.factorio.com/latest/classes/LuaEntity.html
 - Quality formula reference: https://wiki.factorio.com/Quality
 
 Confirm exact API names, lifecycle events, prototype formats, dependency syntax, and packaging rules against the installed Factorio version before implementation.
@@ -82,7 +83,7 @@ Likely V1 shape:
     `-- package.sh
 ```
 
-Current implementation matches this shape. Normal play uses a relative GUI attached to the character inventory plus a status-button fallback window, debug tooling uses a separate GUI, and crafting currently executes instantly through custom script logic.
+Current implementation matches this shape. Normal play uses a bottom-right personal assembler panel, debug tooling uses a separate GUI, and crafting is owned by linked hidden assemblers using vanilla assembler behavior.
 
 ## Build And Package Direction
 
@@ -123,6 +124,7 @@ Current local checks:
 - V0.1.2 passed a temporary headless equipment-grid smoke test covering insertion of `player-quality-quality-module-3-equipment` into power armor.
 - V0.1.3 passed a headless create/reload check with Factorio 2.0.76. A temporary helper mod also validated the `standalone_character_gui` right-side relative GUI anchor.
 - V0.1.4 passed a headless create/reload check with Factorio 2.0.76 after changing dependencies, settings, GUI lifecycle, equipment footprint, and runtime events.
+- V0.1.5 passed a headless create and 120-tick benchmark check with Factorio 2.0.76 after replacing custom hand-crafting with personal assembler equipment and hidden linked assembler prototypes.
 
 ## Technical Risks
 
@@ -131,7 +133,7 @@ Current local checks:
 - Persistent state requires migration discipline after release.
 - GUI changes can conflict with player expectations or other mods if not scoped carefully.
 - Multiplayer behavior must be deterministic and avoid per-client-only assumptions.
-- `begin_crafting` only accepts `RecipeID`, not a documented recipe quality parameter, so quality ingredient selection likely requires custom crafting logic.
-- The native player crafting GUI may not expose every desired selector location; V0.1.4 uses a relative GUI attached to the controller GUI plus a status-button fallback window.
-- Personal quality module equipment uses `battery-equipment` with a 1MJ buffer and 200kW input flow so energy state is visible and script-controllable.
-- Reimplementing recipe handling can get complex for fluids, multiple products, catalysts, recursive prerequisites, and unlock gating. V1 should restrict eligible recipes until each case is proven.
+- `begin_crafting` only accepts `RecipeID`, not a documented recipe quality parameter, so V0.1.5 avoids custom player hand-crafting and reuses vanilla assembler quality controls.
+- Hidden linked assemblers must be tested in a real client because headless checks cannot click/open the assembler GUI.
+- Personal assembler equipment uses `battery-equipment` so energy state is visible and script-controllable.
+- The inventory-transfer layer currently handles item ingredients and item outputs. Fluid recipes need a separate design.

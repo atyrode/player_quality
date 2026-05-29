@@ -1,6 +1,6 @@
 # Development Checklist
 
-Status: V0.1.4 gate fixes and balance setting implemented on 2026-05-29.
+Status: V0.1.5 personal assembler pivot implemented on 2026-05-29.
 
 ## Research
 
@@ -24,11 +24,11 @@ Status: V0.1.4 gate fixes and balance setting implemented on 2026-05-29.
 ## Scaffold
 
 - [x] Add `info.json`.
-- [x] Add `data.lua` with one prototype spike for quality-module armor equipment.
-- [x] Add `control.lua` with one backend quality crafting spike.
+- [x] Add `data.lua` with personal assembler armor equipment and linked hidden assembler prototypes.
+- [x] Add `control.lua` with linked assembler lifecycle, panel, inventory transfer, and energy gating.
 - [x] Add `locale/` entries for player-facing strings.
 - [x] Add a shortcut or custom input for opening the quality crafting UI.
-- [ ] Add settings only if V1 behavior needs configuration.
+- [x] Add runtime-global personal assembler energy multiplier setting.
 - [x] Add package/check scripts for the first local test zip.
 - [x] Add local install helper for the default Linux Factorio mods folder.
 
@@ -36,16 +36,17 @@ Status: V0.1.4 gate fixes and balance setting implemented on 2026-05-29.
 
 - [x] Load Factorio with the mod enabled.
 - [x] Start a new save.
-- [ ] Add or craft quality-module armor equipment.
+- [ ] Add or craft personal assembler armor equipment.
 - [ ] Insert the equipment into modular armor.
-- [ ] Open the character inventory `Quality crafting` panel in a real client.
-- [ ] Craft one eligible recipe using normal ingredients.
-- [ ] Craft one eligible recipe using non-normal ingredients.
+- [ ] Open the bottom-right `Personal assemblers` panel in a real client.
+- [ ] Open the linked vanilla assembler GUI.
+- [ ] Craft one recipe using normal ingredients.
+- [ ] Craft one recipe using non-normal ingredients.
 - [x] Save and reload if runtime state exists.
 - [x] Check headless load output for errors or warnings.
 - [x] Record the result in this checklist.
 
-Headless result: Factorio 2.0.76 created and benchmark-loaded a new save with `quality`, `space-age`, and `player_quality` enabled. This validated prototype loading, `control.lua` compilation, and save reload, but did not exercise the GUI.
+Headless result: Factorio 2.0.76 created and benchmark-loaded a new save with `quality`, `space-age`, and `player_quality` enabled. This validated prototype loading, `control.lua` compilation, and save reload, but did not exercise the real linked assembler GUI.
 
 V0.1.1 smoke result: a temporary local helper mod called the corrected Factorio API methods for recipe category checks, quality unlock checks, and module effect lookup during `on_init`; Factorio 2.0.76 completed map creation without errors.
 
@@ -76,6 +77,8 @@ V0.1.2 adds `/player-quality-test-setup` so test saves can be prepared without a
 V0.1.3 adds the character-inventory quality crafting panel, keeps `/player-quality` as a debug GUI, requires module energy, and enforces researched quality caps.
 
 V0.1.4 fixes reported recipe/quality gate test issues, adds explicit debug research buttons, adds a status-button fallback crafting window, increases module footprint/cost, and adds a runtime-global chance multiplier setting.
+
+V0.1.5 replaces the custom hand-crafting path with personal assembler equipment, linked hidden assemblers, vanilla assembler quality controls, inventory transfer, and armor-grid energy gating.
 
 ## Debugging Workflow
 

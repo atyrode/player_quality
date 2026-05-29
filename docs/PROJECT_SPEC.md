@@ -1,21 +1,21 @@
 # Project Spec
 
-Status: V0.1.4 gate fixes, fallback crafting window, and balance setting implemented on 2026-05-29.
+Status: V0.1.5 personal assembler pivot implemented on 2026-05-29.
 
 ## Goal
 
 Create a Factorio Space Age quality mod named `player_quality`.
 
-The mod lets modular armor act as the player's quality-module carrier for hand crafting.
+The mod lets modular armor host personal assemblers that reuse Factorio's vanilla assembler GUI for recipe quality, ingredient quality, and module slots.
 
 ## Working Assumption
 
 The target behavior probably needs both data-stage prototypes and runtime scripting:
 
-- Data stage for armor equipment items and recipes.
-- Runtime control for quality-aware hand crafting, equipment scanning, GUI, and output quality rolls.
+- Data stage for armor equipment items, linked hidden assembling-machine prototypes, recipes, shortcuts, and settings.
+- Runtime control for equipment scanning, hidden assembler lifecycle, inventory transfer, armor-grid energy gating, and debug tooling.
 
-The native player crafting menu may not be directly extensible. Prove the backend with a mod-owned GUI first, then investigate whether a vanilla-menu-adjacent integration is possible.
+The native player crafting menu is not directly extensible enough for vanilla-quality crafting controls. The current workaround is to provide armor-grid personal assemblers and let the base assembler UI handle quality behavior.
 
 ## Research Sources To Prefer
 
@@ -27,16 +27,16 @@ The native player crafting menu may not be directly extensible. Prove the backen
 
 ## First Milestone
 
-Milestone 1: quality ingredient selection and output roll proof of concept.
+Milestone 1: linked personal assembler proof of concept.
 
 Player-visible flow:
 
-- Player equips at least one quality-module armor equipment item.
-- Player opens the character inventory and uses the attached `Quality crafting` panel.
-- Player selects an eligible hand-craftable recipe.
-- Player selects ingredient quality.
-- Player crafts one item.
-- The mod consumes exact-quality ingredients, rolls output quality using equipped module chance, and inserts the result into the player's inventory.
+- Player equips at least one personal assembler armor equipment item.
+- A bottom-right `Personal assemblers` panel appears.
+- Player opens the linked vanilla assembler GUI.
+- Player selects recipe quality, ingredient quality, and modules through vanilla controls.
+- The mod pulls matching item ingredients from player inventory and returns outputs to the player.
+- The assembler drains armor-grid equipment energy while enabled and crafting.
 
 Implementation files likely needed:
 
@@ -46,35 +46,36 @@ Implementation files likely needed:
 - `locale/en/player-quality.cfg`
 - `scripts/package.sh` once local testing is ready
 
-Status: implemented locally as a packageable first prototype. Factorio 2.0.76 headless can load the mod, create a new save, and reload that save. V0.1.1 fixed the first reported GUI-open crash. V0.1.2 adds `/player-quality-test-setup` for faster real-client testing. V0.1.3 moves normal play to a character-inventory relative GUI, keeps the old window as debug-only tooling, requires module energy, and gates selectable/output qualities by research. V0.1.4 fixes reported gate/test issues, adds a fallback player-facing crafting window, adds a status button, increases equipment footprint/cost, and adds a personal chance multiplier setting.
+Status: implemented locally as a packageable personal assembler prototype. Factorio 2.0.76 headless can load the mod, create a new save, and run a 120-tick benchmark. V0.1.5 removes the custom hand-crafting panel and replaces it with linked hidden assemblers opened from armor equipment.
 
 Validation:
 
-- Load a clean Space Age or quality-enabled save.
-- Insert equipment into modular armor.
-- Craft a simple item from normal ingredients.
-- Craft the same item from non-normal ingredients.
-- Confirm output quality never goes below selected ingredient quality.
-- Confirm removing the equipment disables or hides quality crafting.
+- Load a clean Space Age save.
+- Insert personal assembler equipment into modular armor.
+- Open the linked assembler through the bottom-right panel.
+- Select recipe/quality and install quality modules in the vanilla GUI.
+- Confirm item ingredients move from player inventory to assembler input.
+- Confirm outputs return to player inventory.
+- Confirm removing the equipment removes the panel and destroys the linked assembler after returning contents.
 
 ## Next Target
 
 After the proof of concept:
 
-- Decide whether quality crafting should share the vanilla crafting queue timing or use a mod-owned queue.
-- Playtest the character-inventory relative GUI in a real client and adjust placement if needed.
-- Expand eligible recipe support beyond simple single-product item recipes.
+- Real-client playtest the linked assembler GUI and inventory-transfer behavior.
+- Decide whether fluid recipes should be explicitly hidden, supported by a fluid container pattern, or left to manual insertion only.
+- Improve panel placement and status display if the real client layout needs it.
 - Validate add/remove-save behavior with a real save containing equipment and crafted outputs.
 - Add release automation after the first manual playtest passes.
 
 ## Success Criteria
 
 - The mod loads without errors.
-- Quality-module equipment can be crafted and inserted into modular armor.
-- A player can choose ingredient quality for at least one eligible recipe through the mod UI.
-- The crafted output respects selected ingredient quality and module-based upgrade chance.
-- The quality selector and output roll stop at qualities unlocked by the player's force.
-- Personal quality module recipes unlock with the matching vanilla quality module technologies, including existing saves.
+- Personal assembler equipment can be crafted and inserted into modular armor.
+- A player can open a linked vanilla assembler from equipped armor.
+- The vanilla assembler GUI handles recipe quality, ingredient quality, and module chance.
+- The mod transfers item ingredients and outputs between player inventory and the linked assembler.
+- Personal assembler recipes unlock with the matching vanilla quality module technologies, including existing saves.
 - The behavior works after save/load.
 - Removing the mod does not corrupt the save.
 - Logs are clean enough to debug real issues.

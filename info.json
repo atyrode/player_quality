@@ -1,6 +1,6 @@
 {
   "name": "player_quality",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "title": "Player Quality",
   "author": "atyrode",
   "factorio_version": "2.0",
@@ -9,5 +9,5 @@
     "quality >= 2.0.0",
     "space-age >= 2.0.0"
   ],
-  "description": "Adds quality-module equipment for modular armor and a quality-aware player crafting interface."
+  "description": "Adds personal assembler equipment for modular armor so players can use vanilla quality-aware assembler crafting from their inventory."
 }

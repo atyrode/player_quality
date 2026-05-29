@@ -1,16 +1,16 @@
 # Project Brief
 
-Status: initial direction recorded from operator answers on 2026-05-29.
+Status: updated for V0.1.5 personal assembler pivot on 2026-05-29.
 
 ## Goal
 
 Create a Factorio Space Age quality mod named `player_quality`.
 
-Players can insert quality-module-style equipment into modular armor. When crafting by hand, the player can choose ingredient quality and receive quality-upgrade chances using the same quality-roll model as assembling machines with quality modules.
+Players can insert personal assembler equipment into modular armor. Each personal assembler opens a linked vanilla assembler GUI, so the player can use recipe quality, ingredient quality, and quality modules without placing a world assembler for every small job.
 
 ## Player Problem
 
-Quality is a major Space Age system, but hand crafting does not naturally behave like an assembler with quality modules. Players carrying high-quality ingredients and wearing modular armor should be able to make intentional quality crafts without placing a machine for every small job.
+Quality is a major Space Age system, but hand crafting does not naturally expose assembler-quality controls. Players carrying high-quality ingredients and wearing modular armor should be able to make intentional quality crafts without placing a permanent machine for every small job.
 
 ## Target Audience
 
@@ -22,27 +22,27 @@ Quality is a major Space Age system, but hand crafting does not naturally behave
 
 V1 proves the core loop:
 
-- Add quality-module armor equipment.
+- Add personal assembler armor equipment.
 - Let players place that equipment in modular armor.
-- Provide a small player-facing quality crafting interface.
-- Let players select ingredient quality for eligible hand-craftable recipes.
-- Consume exact-quality ingredients from the player inventory.
-- Roll output quality from equipped quality modules using Factorio's quality formula.
-- Insert the crafted output into the player inventory.
+- Provide a small player-facing panel for opening linked assemblers.
+- Reuse the vanilla assembler GUI for recipe quality, ingredient quality, and modules.
+- Move accepted item ingredients from the player inventory into the linked assembler.
+- Return crafted outputs to the player inventory.
+- Drain armor-grid equipment energy while the linked assembler is enabled and crafting.
 
 ## Non-Goals
 
 - No overhaul-level balance changes.
-- No new production chain beyond quality-module armor equipment.
+- No new production chain beyond personal assembler armor equipment.
 - No intended support matrix for other mods in V1, though the implementation should avoid collisions.
-- No custom graphics unless vanilla quality module icons cannot be reused cleanly.
-- No guaranteed native-player-crafting-menu integration until the Factorio GUI API path is proven.
-- No persistent crafting queue complexity until the basic quality crafting path works.
+- No custom graphics unless vanilla assembler/module icons cannot be reused cleanly.
+- No guaranteed native-player-crafting-menu integration unless Factorio exposes the required GUI API later.
+- No custom crafting queue while the linked vanilla assembler can own recipe and progress state.
 
 ## Assumptions
 
-- The target Factorio version is Factorio 2.0+ with quality enabled; exact local version still needs to be confirmed.
-- The user owns or targets Space Age, but the implementation should depend only on the `quality` mod if that is sufficient.
+- The target Factorio version is Factorio 2.0+ Space Age with quality enabled.
+- The implementation currently depends on `space-age` explicitly.
 - Implementation should prefer Factorio's documented Lua API and conventional mod structure.
 - Compatibility and save safety matter more than clever hooks.
 - Adding the mod to an existing save should be safe.
@@ -50,7 +50,6 @@ V1 proves the core loop:
 
 ## Open Decisions
 
-- Whether `info.json` should require `quality` only or full `space-age`.
-- Whether V1 uses a mod-owned crafting UI only, or also attempts to augment the vanilla player crafting GUI.
-- Whether quality crafting should use real crafting time immediately or be instant for the first proof of concept.
-- Which vanilla technology should unlock the armor equipment.
+- Whether fluid recipes should be unsupported, manual-only, or supported through a later fluid-transfer design.
+- Whether equipment quality should affect personal assembler speed, energy buffer, or draw.
+- Whether personal assembler recipes should stay tied to quality-module technologies or move to automation technologies after balance testing.

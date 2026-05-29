@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+Date: 2026-05-29
+  Features:
+    - Replaced personal quality modules with personal assembler equipment.
+    - Personal assemblers open a linked vanilla assembler GUI where recipes, ingredient quality, and module slots are handled by Factorio.
+    - Added a bottom-right personal assembler panel that appears only while personal assembler equipment is worn.
+    - Personal assemblers pull matching ingredients from the player inventory and return completed outputs to the player.
+    - Added per-assembler enable toggles and armor-grid energy gating.
+    - Added a runtime-global personal assembler energy multiplier setting.
+    - Updated debug controls to give personal assemblers, give vanilla quality modules, research individual related technologies, and toggle infinite assembler energy.
+  Changes:
+    - Personal assembler recipes unlock from the matching vanilla quality module technologies.
+    - The old custom quality hand-crafting UI is removed in favor of the linked assembler flow.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2026-05-29
   Features:

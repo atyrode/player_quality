@@ -1,6 +1,6 @@
 # Playtest Guide
 
-Status: V0.1.4 real-client playtest path.
+Status: V0.1.5 real-client playtest path.
 
 ## Release Channel
 
@@ -18,10 +18,10 @@ Fallback GitHub release page:
 https://github.com/atyrode/player_quality/releases/latest
 ```
 
-Direct V0.1.4 GitHub zip:
+Direct V0.1.5 GitHub zip:
 
 ```text
-https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip
+https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.5.zip
 ```
 
 ## Install
@@ -33,7 +33,7 @@ Preferred path:
 3. Open `Install`.
 4. Search for `Player Quality`.
 5. Install or update it.
-6. Enable `Quality` and `Player Quality`.
+6. Enable `Quality`, `Space Age`, and `Player Quality`.
 7. Restart Factorio when prompted.
 
 Manual fallback:
@@ -44,39 +44,28 @@ Linux:
 
 ```sh
 mkdir -p ~/.factorio/mods
-curl -L -o ~/.factorio/mods/player_quality_0.1.4.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip
+curl -L -o ~/.factorio/mods/player_quality_0.1.5.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.5.zip
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:APPDATA\Factorio\mods"
-Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.4.zip"
+Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.5.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.5.zip"
 ```
 
 macOS:
 
 ```sh
 mkdir -p "$HOME/Library/Application Support/factorio/mods"
-curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.4.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip
+curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.5.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.5.zip
 ```
-
-You can also download the zip from the release page in a browser, then place it in the same mods folder.
 
 If you already installed an older Player Quality zip, remove the old `player_quality_*.zip` from the same mods folder first so Factorio cannot pick the wrong version.
 
-## Enable
-
-1. Start Factorio 2.0 or Space Age.
-2. Open `Mods`.
-3. Enable `Quality`.
-4. Enable `Player Quality`.
-5. Restart Factorio when prompted.
-6. Start a new freeplay save for testing.
-
 ## Instant Test Setup
 
-Paste this into the in-game console in the new test save:
+Start a new freeplay save, then paste this into the in-game console:
 
 ```lua
 /player-quality-test-setup
@@ -86,41 +75,46 @@ If Factorio says this command is unknown, `Player Quality` is not enabled in the
 
 Then:
 
-1. Open the character inventory.
-2. Confirm the attached `Quality crafting` panel appears. If not, click the top `Quality` status button to open the fallback crafting window.
-3. Confirm the top `Quality` status button shows next-quality chance and powered module count.
-4. Open `/player-quality`.
-5. Click `Research module techs` if you want the personal quality module recipes unlocked for the current test.
-6. Click `Research quality techs` only when you want to test non-normal ingredient selection and upgrades.
-7. Select an unlocked recipe and unlocked ingredient quality, set a count, and click `Craft`.
-8. Confirm exact-quality ingredients are consumed and outputs do not exceed the qualities currently unlocked.
+1. Confirm a bottom-right `Personal assemblers` panel appears.
+2. Click `Open` for the personal assembler.
+3. In the vanilla assembler GUI, select a simple recipe such as `iron stick` or `iron chest`.
+4. Select the recipe/input quality in the vanilla quality controls.
+5. Insert the provided quality modules into the assembler module slots.
+6. Confirm the panel shows a non-zero quality chance once modules are installed.
+7. Confirm matching ingredients are pulled from your inventory and outputs return to your inventory.
+8. Use `/player-quality` for debug controls.
 
-The debug GUI is still available with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`. Use it to toggle infinite module energy, give yourself personal quality modules at the selected quality, and manually research/lock test gates.
+Debug controls:
+
+- `Debug: infinite personal assembler energy` lets the assembler run without draining armor equipment.
+- `Give A1/A2/A3` gives personal assembler equipment at the selected debug quality.
+- `Give Q1/Q2/Q3` gives vanilla quality modules at the selected debug quality.
+- Research buttons unlock one listed technology at a time, so before/after behavior can be tested precisely.
 
 Energy test:
 
-1. In the debug GUI, turn off `Debug: infinite module energy`.
-2. Remove or discharge the personal quality modules.
-3. Open the character inventory and confirm the next quality chance drops to `0.00%`.
-4. Attempt a quality craft and confirm the mod reports that personal quality modules need energy.
+1. Open `/player-quality`.
+2. Turn off `Debug: infinite personal assembler energy`.
+3. Let the equipment discharge, or remove power from the armor grid.
+4. Confirm the personal assembler panel reports `no energy` and the linked assembler stops.
+5. Turn debug infinite energy back on and confirm crafting resumes.
 
 Research gate test:
 
-1. Start a clean save or use `Lock qualities` in the debug GUI.
-2. Confirm only researched qualities appear in the ingredient-quality selector.
-3. Confirm personal quality module recipes are not listed before module tech research.
-4. Click `Research module techs`.
-5. Confirm the matching personal quality module recipes unlock.
-6. Click `Research quality techs`.
-7. Confirm new qualities appear and output upgrades stop at the highest researched quality.
+1. Start a clean save.
+2. Confirm personal assembler recipes are not available before the matching quality module technologies.
+3. Open `/player-quality`.
+4. Research `quality-module`, then confirm `Personal assembler` unlocks.
+5. Research `quality-module-2`, then confirm `Personal assembler 2` unlocks.
+6. Research `quality-module-3`, then confirm `Personal assembler 3` unlocks.
+7. Use `epic-quality` and `legendary-quality` buttons only when testing those quality tiers.
+8. Confirm the vanilla assembler GUI does not allow qualities above the current research gates.
 
 Balance setting test:
 
 1. Open Factorio's mod settings.
-2. Change `Personal quality chance multiplier`.
-3. Confirm `0.01` is divided by 100, `0.1` is divided by 10, and `1.0` is vanilla module chance.
-
-Also test the normal-quality path by selecting `normal` ingredient quality and crafting another batch.
+2. Change `Personal assembler energy multiplier`.
+3. Confirm lower values drain armor equipment more slowly and higher values drain it faster.
 
 ## Report Back
 
@@ -128,12 +122,13 @@ Send:
 
 - Factorio version.
 - Whether the mod appeared in the Mods menu.
-- Whether the `Quality crafting` panel appeared when opening inventory.
-- Whether the debug GUI opened with `/player-quality`.
-- Whether `iron stick` appeared in the recipe selector.
-- Whether rare input crafting consumed the correct items.
-- What output qualities you received.
-- Whether unpowered modules blocked crafting.
-- Whether locked qualities stayed unavailable.
+- Whether the `Personal assemblers` panel appeared after `/player-quality-test-setup`.
+- Whether `Open` showed the vanilla assembler GUI.
+- Whether recipe and quality selection appeared in that vanilla GUI.
+- Whether quality modules changed the displayed quality chance.
+- Whether ingredients were pulled from inventory.
+- Whether outputs returned to inventory.
+- Whether unpowered equipment stopped crafting.
+- Whether research gates behaved correctly.
 - Any error text from the game.
 - The relevant part of `factorio-current.log` if Factorio reports a mod error.

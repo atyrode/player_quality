@@ -12,17 +12,18 @@ notes_path="dist/release-notes-${version}.md"
 cat > "$notes_path" <<NOTES
 Player Quality ${version}.
 
-- Adds personal quality module equipment for modular armor.
-- Adds a player-facing Quality crafting panel and a top status-button fallback crafting window.
+- Adds personal assembler equipment for modular armor.
+- Opens linked vanilla assembler GUIs from a bottom-right Personal assemblers panel.
+- Uses vanilla assembler recipe quality, ingredient quality, and module slots.
+- Pulls matching item ingredients from player inventory and returns finished outputs.
+- Drains armor-grid energy while personal assemblers are enabled and crafting.
 - Keeps Ctrl + Shift + Q, the shortcut button, and /player-quality for debug controls.
-- Supports exact ingredient quality selection for simple unlocked item recipes.
-- Rolls output quality using powered personal module chance, researched quality gates, and the vanilla quality chain.
-- Provides a runtime-global personal quality chance multiplier setting.
+- Provides a runtime-global personal assembler energy multiplier setting.
 
 Validation:
 - Packaged zip layout checked.
-- Factorio 2.0.76 headless created and reloaded a save with quality, space-age, and player_quality enabled.
-- Fresh-save gate smoke test checked recipe locks, quality locks, and mod setting loading.
+- Factorio 2.0.76 headless created and benchmarked a save with quality, space-age, and player_quality enabled.
+- Prototype loading and 120-tick runtime smoke checks passed.
 - See changelog.txt for version-specific changes.
 
 Playtest guide:

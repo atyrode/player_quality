@@ -1,6 +1,6 @@
 # Architecture Notes
 
-Status: initial direction recorded from operator answers on 2026-05-29.
+Status: V0.1.5 personal assembler architecture on 2026-05-29.
 
 ## Current Repository Shape
 
@@ -8,17 +8,17 @@ Status: initial direction recorded from operator answers on 2026-05-29.
 - `README.md`: repository entry point and documentation map.
 - `docs/`: planning, design, architecture, and checklist documents.
 - `info.json`: mod metadata and dependencies.
-- `data.lua`: quality-module equipment, items, recipes, shortcut, and keybind prototypes.
-- `control.lua`: character-inventory quality crafting panel, debug GUI, equipment quality chance scan, ingredient removal, energy consumption, quality rolls, and output insertion.
+- `data.lua`: personal assembler equipment, hidden linked assembler entities, items, recipes, shortcut, and keybind prototypes.
+- `control.lua`: bottom-right assembler panel, debug GUI, equipment scan, hidden assembler lifecycle, inventory transfer, energy consumption, and output insertion.
 - `locale/en/player-quality.cfg`: English names, descriptions, GUI text, and command help.
 - `changelog.txt`: Factorio-facing release notes.
 - `scripts/`: lightweight check and package helpers.
 
 Expected first runtime shape:
 
-- `data.lua`: declare quality-module armor equipment, items, recipes, shortcut/custom input if needed.
-- `control.lua`: GUI lifecycle, quality crafting logic, equipment scanning, craft completion, and save/load hooks.
-- `settings.lua`: runtime-global personal quality chance multiplier.
+- `data.lua`: declare personal assembler armor equipment, linked assembler entities, items, recipes, shortcut/custom input if needed.
+- `control.lua`: GUI lifecycle, hidden assembler management, inventory transfer, energy gating, and save/load hooks.
+- `settings.lua`: runtime-global personal assembler energy multiplier.
 - `locale/en/player-quality.cfg`: player-facing names, descriptions, GUI captions, and messages.
 
 ## Ownership Boundaries
@@ -40,63 +40,58 @@ Do not add cross-cutting runtime systems until the first feature proves they are
 
 Preferred V1 state:
 
-- Per-player GUI state: selected recipe, ingredient quality, count, and debug infinite-energy toggle.
-- Runtime-global setting state: personal quality chance multiplier, default `0.1`, clamped between `0.01` and `1.0`.
-- Optional per-player craft queue only if real crafting time is implemented.
+- Per-player linked assembler slots and debug infinite-energy toggle.
+- Runtime-global setting state: personal assembler energy multiplier, default `1.0`, clamped between `0.1` and `10.0`.
 
-Avoid persistent state for equipment effects; compute equipped quality-module chance from the current armor equipment grid when needed.
+The linked assembler entity owns recipe, quality selection, module inventory, and crafting progress. The mod rebuilds or destroys slots based on the current armor equipment grid.
 
-If a custom crafting queue is implemented, store:
-
-- Player index.
-- Recipe name.
-- Ingredient quality name.
-- Count remaining.
-- Progress ticks.
-- Precomputed output plan only if needed for save/load stability.
-
-Do not store Lua objects in persistent state.
+The current prototype stores LuaEntity references for linked hidden assemblers. If save/load testing shows invalid references or migration friction, replace this with stable entity lookup through registration.
 
 ## Event Model
 
 Likely events:
 
-- `on_gui_click`, `on_gui_selection_state_changed`, and related GUI events for the quality crafting UI.
-- `on_gui_opened` and relative GUI anchoring for the character-inventory `Quality crafting` panel.
+- `on_gui_click`, `on_gui_checked_state_changed`, and related GUI events for the personal assembler/debug UI.
+- `on_gui_opened` to refresh the bottom-right panel when the player opens normal game GUIs.
 - `on_lua_shortcut` or a custom input for opening the debug GUI.
-- `on_research_finished` and configuration sync for retroactive personal quality module recipe unlocks.
-- `on_player_armor_inventory_changed`, `on_player_placed_equipment`, and `on_player_removed_equipment` for refreshing chance displays.
-- `on_runtime_mod_setting_changed` for refreshing the personal chance multiplier display.
-- `on_tick` only if a custom timed crafting queue is implemented.
-- `on_player_crafted_item` only if a later iteration modifies vanilla hand-crafting output.
+- `on_research_finished` and configuration sync for retroactive personal assembler recipe unlocks.
+- `on_player_armor_inventory_changed`, `on_player_placed_equipment`, and `on_player_removed_equipment` for refreshing linked assembler slots.
+- `on_runtime_mod_setting_changed` for refreshing energy setting displays.
+- `on_nth_tick` for energy draw, ingredient feeding, output return, and panel status refresh.
 
-Avoid frequent inventory scans. Scan equipment on demand or in response to equipment/armor events.
+Keep scans coarse. The current prototype scans equipped assemblers and active assembler inventories every 30 ticks for connected players.
 
 ## Prototype Model
 
 Expected custom prototypes:
 
-- `player-quality-quality-module-equipment`
-- `player-quality-quality-module-2-equipment`
-- `player-quality-quality-module-3-equipment`
+- `player-quality-personal-assembler-equipment`
+- `player-quality-personal-assembler-2-equipment`
+- `player-quality-personal-assembler-3-equipment`
+- `player-quality-personal-assembler-entity`
+- `player-quality-personal-assembler-2-entity`
+- `player-quality-personal-assembler-3-entity`
 - Matching item prototypes.
 - Matching recipes.
 - Optional shortcut/custom input for opening the debug UI.
 
 Expected dependency on vanilla prototypes:
 
-- Vanilla quality modules supply source icon/effect semantics.
+- Vanilla assemblers supply source icon/entity semantics.
+- Vanilla quality modules are inserted into linked assemblers directly by the player.
 - Vanilla armor equipment category should be used if possible so existing modular armor grids accept the equipment.
 
 Avoid modifying vanilla quality modules or armor grids unless testing proves it is required.
 
 Current implementation details:
 
-- The equipment prototypes are 4x4 `battery-equipment` with a 1MJ buffer and 200kW input flow so they can be inserted into standard armor grids and spend charge on quality crafting.
-- Recipes consume the matching vanilla quality module plus a larger amount of circuits, batteries, and tier-appropriate structural ingredients.
+- The equipment prototypes are 4x4 `battery-equipment` with tiered buffers/input flow so they can be inserted into standard armor grids and spend charge while crafting.
+- Recipes consume assemblers, matching vanilla quality modules, batteries, and tier-appropriate circuit/structural ingredients.
 - Recipes are unlocked from the matching vanilla quality module technologies when those technologies exist; runtime sync explicitly disables them again if an old save had them enabled before research.
-- Runtime quality rolls read the equipped module item's quality-scaled `quality` effect, multiply it by the global personal chance multiplier, require each module to have enough stored energy for the requested craft count, then follow the prototype quality chain with `current.next_probability` as the vanilla multiplier.
-- Runtime quality selection and upgrade rolls are capped by qualities unlocked by the player's force.
+- Hidden assembler entities use copied vanilla assembling-machine prototypes with void energy, no collision mask, no mining, and script-controlled `active` state.
+- Runtime energy gating drains the matching equipment while the linked assembler has a recipe and is enabled.
+- Runtime inventory transfer inserts only item ingredients accepted by the assembler input inventory, preserving vanilla quality filters.
+- Vanilla assembler behavior handles quality selection, module effects, and output quality gates.
 
 ## Compatibility Practices
 

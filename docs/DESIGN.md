@@ -1,23 +1,22 @@
 # Design Direction
 
-Status: initial direction recorded from operator answers on 2026-05-29.
+Status: V0.1.5 personal assembler direction on 2026-05-29.
 
 ## Player Experience
 
-A player wearing modular armor can install quality modules as personal equipment. With that equipment installed, hand crafting gains a quality-aware path: choose the ingredient quality, craft from matching ingredients, and get the same chance-based quality upgrades that a machine would get from quality modules.
+A player wearing modular armor can install personal assemblers as equipment. With that equipment installed, the player opens a linked vanilla assembler GUI, chooses recipe quality and ingredient quality there, inserts normal quality modules, and crafts from inventory-backed inputs.
 
 ## Core Feature Idea
 
 Core loop:
 
-- Craft or obtain quality-module armor equipment.
+- Craft or obtain personal assembler armor equipment.
 - Insert it into modular armor.
-- Open the character inventory and use the attached `Quality crafting` panel.
-- Pick recipe, ingredient quality, and count.
-- Craft using exact-quality ingredients.
-- Output quality is selected ingredient quality or better, based on equipped module chance.
+- Use the bottom-right `Personal assemblers` panel to open a linked assembler.
+- Pick recipe, quality, and modules in the vanilla assembler GUI.
+- The mod moves accepted item ingredients from inventory into the assembler and returns outputs.
 
-The long-term ideal is for this to feel like assembler ingredient-quality selection, but attached to the player's crafting workflow.
+The goal is to feel like a portable assembler, not a separate cheat crafting menu.
 
 ## Balance Direction
 
@@ -25,69 +24,59 @@ This is balance-changing additional gameplay, not pure quality-of-life.
 
 Balance intent:
 
-- The player gets new personal quality crafting utility, but only by spending armor grid space.
-- Equipped module tier and equipment item quality should matter.
-- The output formula should follow vanilla quality rules instead of inventing a stronger shortcut.
+- The player gets portable quality crafting utility, but only by spending armor grid space.
+- Personal assembler tier should matter through speed, module slots, and energy draw.
+- Quality behavior should come from vanilla assembler/module rules instead of custom output rolling.
 - V1 should avoid convenience features that bypass ingredient quality requirements.
-- Crafting with personal quality modules should require module energy unless debug infinite energy is explicitly enabled.
-- Personal module chance defaults to one tenth of vanilla module chance, with a runtime-global setting from one hundredth to vanilla chance for balancing.
-- Personal quality modules occupy a 4x4 armor grid footprint.
+- Crafting with personal assemblers should require armor-grid energy unless debug infinite energy is explicitly enabled.
+- Personal assembler energy draw has a runtime-global multiplier for balancing.
+- Personal assemblers occupy a 4x4 armor grid footprint.
 
 ## Settings Direction
 
-No settings are required yet.
+Current setting:
+
+- Personal assembler energy multiplier, default `1.0`, range `0.1` to `10.0`.
 
 Possible later settings:
 
-- Enable or disable native hand-crafting output upgrades if implemented.
-- Scale equipment size or module chance if balance testing shows the defaults are too strong.
+- Scale equipment size or energy draw if balance testing shows the defaults are too strong.
 - Restrict quality crafting to unlocked recipe categories.
 
 ## UI And Controls
 
-V1 uses a mod-owned `Quality crafting` panel anchored to the character inventory GUI. The older free-floating window remains as a debug GUI only.
+V1 uses a compact bottom-right `Personal assemblers` panel while personal assembler equipment is worn. The free-floating debug window remains debug-only.
 
 Expected controls:
 
-- Recipe selector.
-- Ingredient quality selector.
-- Count selector.
-- Craft button.
-- Active next-quality chance and powered-module count.
-- Top status button showing current next-quality chance and opening a fallback crafting window.
-- Clear feedback for missing exact-quality ingredients.
-- Clear feedback when no quality-module equipment is installed.
-- Clear feedback when installed modules are unpowered.
-
-Preferred later UX:
-
-- Show ingredient quality controls near the native player crafting menu if Factorio supports it cleanly.
+- One row per equipped personal assembler.
+- Open button for the linked vanilla assembler.
+- Enable checkbox for energy/crafting control.
+- Quality chance, energy percentage, and ready/no-energy status.
 
 Debug controls:
 
 - `Ctrl + Shift + Q`, the shortcut button, and `/player-quality` open the debug GUI.
-- The debug GUI can enable infinite module energy and give personal quality modules for testing.
-- The debug GUI has explicit research/lock buttons so recipe and quality gates can be tested before and after.
+- The debug GUI can enable infinite personal assembler energy, give personal assemblers, and give vanilla quality modules for testing.
+- The debug GUI has individual research buttons so recipe and quality gates can be tested before and after.
 
 Current prototype behavior:
 
-- Crafting is instant.
-- The GUI lists simple unlocked item recipes in the `crafting` category.
-- The ingredient-quality selector lists only qualities unlocked by the player's force.
-- The GUI skips recipes with fluids, non-item ingredients, multiple products, probabilistic products, or no ingredients.
-- Output upgrade rolls use active equipped quality chance multiplied by each current quality tier's `next_probability`, and stop before locked qualities.
+- Crafting timing, recipe selection, quality selection, and module effects are owned by the linked vanilla assembler.
+- The inventory-feeding layer only moves item ingredients that the assembler input inventory accepts.
+- Fluid ingredients are not automatically fed in V1.
 
 ## Terminology
 
 - Player Quality: mod display name.
-- Quality module equipment: armor-grid equipment that contributes quality chance to hand crafting.
+- Personal assembler: armor-grid equipment that owns one linked hidden assembler.
 - Ingredient quality: the exact quality required for item ingredients.
-- Output quality: the quality of the crafted result after quality rolls.
-- Eligible recipe: a hand-craftable item recipe supported by the mod-owned crafting path.
+- Output quality: the quality of the crafted result as produced by the vanilla assembler.
+- Linked assembler: hidden assembling-machine entity opened through the personal assembler panel.
 
 ## Art And Sound
 
-Prefer reusing vanilla quality module icons through prototype references.
+Prefer reusing vanilla assembler and quality module icons through prototype references.
 
 If the game requires custom icons for armor equipment variants, create simple derived icons and document source paths and license expectations before publishing.
 
@@ -102,7 +91,6 @@ If the game requires custom icons for armor equipment variants, create simple de
 
 ## Open Questions
 
-- Can Factorio's native player crafting UI be augmented, or should we keep a separate GUI permanently?
-- Should the first playable version craft instantly or use a timed mod-owned queue?
-- Which recipes are eligible in V1: single-product item recipes only, or broader recipe support?
-- Should armor equipment size match vanilla module item size conceptually, or be larger for balance?
+- Should fluid recipes be unsupported, manual-only, or handled through a portable fluid-container pattern?
+- Should equipment quality affect assembler speed, energy buffer, or energy draw?
+- Should multiple personal assemblers have a higher cost or footprint curve after real playtesting?

@@ -2,7 +2,7 @@
 
 Factorio mod project workspace.
 
-The target mod lets players put quality-module-style equipment into modular armor. When equipped, the player can hand-craft with quality ingredients and receive quality-upgrade rolls like an assembling machine with quality modules.
+The target mod lets players install personal assemblers in modular armor. Each personal assembler opens a linked vanilla assembler GUI, so recipe selection, ingredient quality, and module slots use Factorio's native quality-aware assembler behavior.
 
 ## Current Shape
 
@@ -10,9 +10,11 @@ The target mod lets players put quality-module-style equipment into modular armo
 - Planning and tracking documents: [docs/](docs/).
 - Factorio mod scaffold: `info.json`, `data.lua`, `control.lua`, and `locale/`.
 - Factorio changelog: `changelog.txt`.
-- Current prototype: personal quality-module armor equipment plus an instant `Quality crafting` panel attached to the character inventory GUI for simple hand-craftable item recipes.
-- A top status button shows current next-quality chance and opens a player-facing fallback crafting window if the inventory-attached panel is not visible.
-- A runtime-global mod setting scales personal quality chance from `0.01` to `1.0`; default `0.1` means divided by 10.
+- Current prototype: personal assembler armor equipment with linked hidden assembling machines.
+- A bottom-right `Personal assemblers` panel appears only while personal assembler equipment is worn.
+- Opening a personal assembler uses the vanilla assembler UI for recipe quality, ingredient quality, and module slots.
+- Personal assemblers pull matching ingredients from the player's inventory, return completed outputs, and drain armor-grid energy while enabled.
+- A runtime-global mod setting scales personal assembler energy draw from `0.1` to `10.0`; default `1.0` uses the listed draw.
 - Debug tools remain available through `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`.
 
 ## Development
@@ -89,20 +91,19 @@ The full install and instant new-save setup path is in [docs/PLAYTEST.md](docs/P
 /player-quality-test-setup
 ```
 
-5. Open the character inventory to use the `Quality crafting` panel. If it does not appear, click the top `Quality` status button to open the player-facing fallback window.
-6. Use `/player-quality` only for debug controls such as infinite energy and manual research buttons.
-7. Select an unlocked simple recipe such as iron stick, choose an unlocked ingredient quality, set a count, and craft.
-8. Confirm exact-quality ingredients are consumed and the output does not exceed researched quality.
+5. Use the bottom-right `Personal assemblers` panel to open the linked assembler.
+6. In the vanilla assembler UI, choose a recipe, choose recipe/ingredient quality, and place quality modules in module slots.
+7. Use `/player-quality` only for debug controls such as infinite energy, give buttons, and individual research buttons.
+8. Confirm exact-quality ingredients are pulled from inventory, outputs return to inventory, and quality options obey research gates.
 
-V0.1.4 has been smoke-tested with Factorio 2.0.76 headless by creating and reloading a save with `quality`, `space-age`, and `player_quality` enabled. The actual GUI still needs a real client playtest.
+V0.1.5 has been smoke-tested with Factorio 2.0.76 headless by creating and benchmarking a save with `quality`, `space-age`, and `player_quality` enabled. The actual linked assembler GUI still needs a real client playtest.
 
 ## Prototype Limits
 
-- The quality crafting panel is attached to the character inventory GUI, but it still uses mod-owned instant crafting rather than Factorio's native crafting queue.
-- Crafting is instant for the first proof of concept.
-- Only unlocked, simple item recipes in the `crafting` category are listed.
-- Recipes with fluids, multiple products, probabilistic products, or non-item ingredients are skipped.
-- The current armor equipment is implemented as 4x4 battery equipment so it can live in a standard armor grid, cost meaningful space, and consume charge per quality craft.
+- Personal assemblers are hidden linked assembling machines on a private surface.
+- The mod feeds item ingredients from the player inventory opportunistically; fluid recipes are not supported by the inventory-feeding layer yet.
+- The assembler's own vanilla GUI is responsible for recipe quality, ingredient quality, modules, and crafting behavior.
+- The current armor equipment is implemented as 4x4 battery equipment so it can live in a standard armor grid, cost meaningful space, and consume charge while crafting.
 
 ## Documents
 
