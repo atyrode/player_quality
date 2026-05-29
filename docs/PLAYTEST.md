@@ -22,6 +22,8 @@ https://github.com/atyrode/player_quality/releases/latest/download/player_qualit
 
 ## Install
 
+The repository is public, so these commands do not require GitHub CLI or authentication.
+
 Linux:
 
 ```sh
@@ -42,6 +44,8 @@ macOS:
 mkdir -p "$HOME/Library/Application Support/factorio/mods"
 curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.0.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.0.zip
 ```
+
+You can also download the zip from the release page in a browser, then place it in the same mods folder.
 
 If you already installed an older Player Quality zip, remove the old `player_quality_*.zip` from the same mods folder first so Factorio cannot pick the wrong version.
 
