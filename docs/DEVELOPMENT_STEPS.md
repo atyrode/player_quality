@@ -1,6 +1,6 @@
 # Development Checklist
 
-Status: first packageable prototype implemented and headless load-tested on 2026-05-29.
+Status: V0.1.1 crash fix implemented on 2026-05-29.
 
 ## Research
 
@@ -47,6 +47,8 @@ Status: first packageable prototype implemented and headless load-tested on 2026
 
 Headless result: Factorio 2.0.76 created and benchmark-loaded a new save with `quality`, `space-age`, and `player_quality` enabled. This validated prototype loading, `control.lua` compilation, and save reload, but did not exercise the GUI.
 
+V0.1.1 smoke result: a temporary local helper mod called the corrected Factorio API methods for recipe category checks, quality unlock checks, and module effect lookup during `on_init`; Factorio 2.0.76 completed map creation without errors.
+
 ## Compatibility And Safety
 
 - [ ] Review whether the feature affects existing saves.
@@ -62,9 +64,10 @@ Headless result: Factorio 2.0.76 created and benchmark-loaded a new save with `q
 - [x] Validate the zip layout before release.
 - [x] Write release notes.
 - [x] Add GitHub release helper.
+- [x] Add Factorio Mod Portal publish helper.
 - [x] Decide whether to publish to GitHub only or also the Factorio mod portal.
 
-Release channel decision: use GitHub Releases for V0.1.0 real-client testing. Publish to the Factorio Mod Portal after a real client confirms the GUI opens, crafts, and reloads cleanly.
+Release channel decision: publish V0.1.1 to the Factorio Mod Portal so in-game install/update can be used for faster iteration.
 
 ## Debugging Workflow
 

@@ -11,6 +11,7 @@ Status: initial direction recorded from operator answers on 2026-05-29.
 - `data.lua`: quality-module equipment, items, recipes, shortcut, and keybind prototypes.
 - `control.lua`: Player Quality GUI, equipment quality chance scan, ingredient removal, quality rolls, and output insertion.
 - `locale/en/player-quality.cfg`: English names, descriptions, GUI text, and command help.
+- `changelog.txt`: Factorio-facing release notes.
 - `scripts/`: lightweight check and package helpers.
 
 Expected first runtime shape:

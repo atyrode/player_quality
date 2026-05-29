@@ -1,26 +1,42 @@
 # Playtest Guide
 
-Status: V0.1.0 real-client playtest path.
+Status: V0.1.1 real-client playtest path.
 
 ## Release Channel
 
-Use GitHub Releases for the first iterations.
+Use the Factorio Mod Portal once the release is published there.
 
-Do not publish to the Factorio Mod Portal yet. The current build has only been validated through Factorio headless load/reload checks; the GUI still needs a real client pass. After the GUI opens, crafts, and reloads cleanly for at least one manual test, the Mod Portal is the right next channel because it gives normal in-game install/update behavior.
+Mod Portal page:
 
-Latest release page:
+```text
+https://mods.factorio.com/mod/player_quality
+```
+
+Fallback GitHub release page:
 
 ```text
 https://github.com/atyrode/player_quality/releases/latest
 ```
 
-Direct V0.1.0 zip:
+Direct V0.1.1 GitHub zip:
 
 ```text
-https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.0.zip
+https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip
 ```
 
 ## Install
+
+Preferred path:
+
+1. Start Factorio.
+2. Open `Mods`.
+3. Open `Install`.
+4. Search for `Player Quality`.
+5. Install or update it.
+6. Enable `Quality` and `Player Quality`.
+7. Restart Factorio when prompted.
+
+Manual fallback:
 
 The repository is public, so these commands do not require GitHub CLI or authentication.
 
@@ -28,21 +44,21 @@ Linux:
 
 ```sh
 mkdir -p ~/.factorio/mods
-curl -L -o ~/.factorio/mods/player_quality_0.1.0.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.0.zip
+curl -L -o ~/.factorio/mods/player_quality_0.1.1.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:APPDATA\Factorio\mods"
-Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.0.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.0.zip"
+Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.1.zip"
 ```
 
 macOS:
 
 ```sh
 mkdir -p "$HOME/Library/Application Support/factorio/mods"
-curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.0.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.0.zip
+curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.1.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.1.zip
 ```
 
 You can also download the zip from the release page in a browser, then place it in the same mods folder.

@@ -73,7 +73,7 @@ local function get_equipped_quality_chance(player)
     local module_name = EQUIPMENT_TO_MODULE[equipment.name]
     local module = module_name and prototypes.item[module_name]
     if module and module.get_module_effects then
-      local effects = module:get_module_effects(quality_name_from_object(equipment.quality))
+      local effects = module.get_module_effects(quality_name_from_object(equipment.quality))
       if effects and effects.quality then
         chance = chance + effects.quality
       end
@@ -89,7 +89,7 @@ local function is_quality_unlocked(force, quality_name)
   end
 
   if force.is_quality_unlocked then
-    return force:is_quality_unlocked(quality_name)
+    return force.is_quality_unlocked(quality_name)
   end
 
   return true
@@ -128,7 +128,7 @@ end
 
 local function has_crafting_category(recipe)
   if recipe.has_category then
-    return recipe:has_category("crafting")
+    return recipe.has_category("crafting")
   end
 
   return recipe.category == "crafting"

@@ -9,6 +9,7 @@ The target mod lets players put quality-module-style equipment into modular armo
 - Persistent agent/contributor workflow rules: [AGENTS.md](AGENTS.md).
 - Planning and tracking documents: [docs/](docs/).
 - Factorio mod scaffold: `info.json`, `data.lua`, `control.lua`, and `locale/`.
+- Factorio changelog: `changelog.txt`.
 - Current prototype: personal quality-module armor equipment plus an instant Player Quality crafting GUI for simple hand-craftable item recipes.
 
 ## Development
@@ -54,11 +55,19 @@ Publish or update the GitHub release for the current `info.json` version:
 scripts/release.sh
 ```
 
-The first iteration should use GitHub Releases. Wait on the Factorio Mod Portal until the real client GUI playtest passes.
+Publish or update the Factorio Mod Portal release:
+
+```sh
+FACTORIO_MOD_PORTAL_API_KEY=<your-api-key> scripts/publish-portal.sh
+```
+
+The API key must be created on `https://factorio.com/profile` with `ModPortal: Publish Mods`, `ModPortal: Upload Mods`, and `ModPortal: Edit Mods` usages. Do not commit the key or paste it into chat.
 
 ## Download And Playtest
 
-Use the latest GitHub release:
+Preferred once published: install `Player Quality` from Factorio's in-game Mods interface.
+
+Fallback manual download: use the latest GitHub release:
 
 ```text
 https://github.com/atyrode/player_quality/releases/latest

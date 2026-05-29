@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+Date: 2026-05-29
+  Bugfixes:
+    - Fixed opening the Player Quality GUI crashing when scanning hand-craftable recipes.
+  Scripting:
+    - Use Factorio runtime API dot-call syntax for object methods.
+
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 2026-05-29
+  Features:
+    - Added personal quality module equipment for modular armor.
+    - Added a Player Quality crafting GUI opened with Ctrl + Shift + Q, the shortcut button, or /player-quality.
+    - Added exact ingredient quality selection for simple unlocked item recipes.
+    - Added output quality rolls based on equipped quality module chance.
+  Modding:
+    - Added package, local install, GitHub release, and playtest documentation.

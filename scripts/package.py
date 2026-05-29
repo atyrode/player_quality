@@ -18,6 +18,7 @@ def package_files():
         "data.lua",
         "control.lua",
         "README.md",
+        "changelog.txt",
     ]
 
     files.extend(str(path.relative_to(ROOT)) for path in sorted((ROOT / "locale").rglob("*")) if path.is_file())

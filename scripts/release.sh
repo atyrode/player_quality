@@ -10,7 +10,7 @@ package_path="$(scripts/package.sh | tail -n 1)"
 notes_path="dist/release-notes-${version}.md"
 
 cat > "$notes_path" <<NOTES
-First playable Player Quality prototype.
+Player Quality ${version}.
 
 - Adds personal quality module equipment for modular armor.
 - Adds a Player Quality crafting GUI opened with Ctrl + Shift + Q, the shortcut button, or /player-quality.
@@ -21,7 +21,7 @@ First playable Player Quality prototype.
 Validation:
 - Packaged zip layout checked.
 - Factorio 2.0.76 headless created and reloaded a save with quality, space-age, and player_quality enabled.
-- Real client GUI playtest is still required.
+- See changelog.txt for version-specific changes.
 
 Playtest guide:
 https://github.com/atyrode/player_quality/blob/main/docs/PLAYTEST.md

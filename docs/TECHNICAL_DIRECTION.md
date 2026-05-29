@@ -97,8 +97,9 @@ GitHub releases come first. Factorio mod portal packaging comes after the first 
 Current release direction:
 
 - Use `scripts/release.sh` to build the zip and create or update a GitHub release for the current `info.json` version.
+- Use `scripts/publish-portal.sh` to publish or update the Factorio Mod Portal release. It requires `FACTORIO_MOD_PORTAL_API_KEY` from `https://factorio.com/profile` with publish, upload, and edit permissions.
 - Use `docs/PLAYTEST.md` as the operator-facing install and test guide.
-- Defer Factorio Mod Portal publishing until a real Factorio client validates the GUI workflow.
+- Prefer the Factorio Mod Portal for tester installs once V0.1.1 is published.
 
 ## Validation Direction
 
@@ -115,8 +116,9 @@ Useful checks may include:
 Current local checks:
 
 - `scripts/check.sh`: validates `info.json` and runs `luac -p` when `luac` is installed.
-- `scripts/package.sh`: runs checks and writes `dist/player_quality_0.1.0.zip`.
+- `scripts/package.sh`: runs checks and writes `dist/player_quality_<version>.zip`.
 - Factorio 2.0.76 headless successfully created and benchmark-loaded a new save with `quality`, `space-age`, and `player_quality` enabled, which validated data-stage loading, `control.lua` compilation, and save reload.
+- V0.1.1 also passed a temporary headless API smoke test covering the dot-call signatures for `LuaRecipe::has_category`, `LuaForce::is_quality_unlocked`, and `LuaItemPrototype::get_module_effects`.
 
 ## Technical Risks
 
