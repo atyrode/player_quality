@@ -30,6 +30,8 @@ Balance intent:
 - The output formula should follow vanilla quality rules instead of inventing a stronger shortcut.
 - V1 should avoid convenience features that bypass ingredient quality requirements.
 - Crafting with personal quality modules should require module energy unless debug infinite energy is explicitly enabled.
+- Personal module chance defaults to one tenth of vanilla module chance, with a runtime-global setting from one hundredth to vanilla chance for balancing.
+- Personal quality modules occupy a 4x4 armor grid footprint.
 
 ## Settings Direction
 
@@ -52,6 +54,7 @@ Expected controls:
 - Count selector.
 - Craft button.
 - Active next-quality chance and powered-module count.
+- Top status button showing current next-quality chance and opening a fallback crafting window.
 - Clear feedback for missing exact-quality ingredients.
 - Clear feedback when no quality-module equipment is installed.
 - Clear feedback when installed modules are unpowered.
@@ -64,6 +67,7 @@ Debug controls:
 
 - `Ctrl + Shift + Q`, the shortcut button, and `/player-quality` open the debug GUI.
 - The debug GUI can enable infinite module energy and give personal quality modules for testing.
+- The debug GUI has explicit research/lock buttons so recipe and quality gates can be tested before and after.
 
 Current prototype behavior:
 

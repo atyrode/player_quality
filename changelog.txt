@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+Date: 2026-05-29
+  Features:
+    - Added an always-visible Player Quality status button showing next-quality chance and powered module count.
+    - Clicking the status button opens the player-facing Quality crafting window as a fallback when the inventory-anchored panel is not visible.
+    - Added debug buttons to research quality module technologies, research quality unlock technologies, and lock non-normal qualities for before/after testing.
+    - Added a runtime-global personal quality chance multiplier setting, from 0.01x to 1.0x, defaulting to 0.1x.
+  Changes:
+    - Personal quality module recipes are now explicitly disabled until the matching vanilla quality module technologies are researched.
+    - /player-quality-test-setup no longer unlocks qualities or personal quality module recipes automatically.
+    - Personal quality modules now occupy a 4x4 armor grid area and have much higher recipe costs.
+    - Player Quality now requires Space Age explicitly.
+  Bugfixes:
+    - Fixed old test setup state leaving personal quality module recipes visible before research.
+    - Fixed test setup bypassing quality research gates and allowing legendary output during gate tests.
+    - Switched the inventory relative GUI anchor to the controller GUI and keep it refreshed persistently.
+    - Removed duplicate item-side custom tooltip fields so energy cost and quality chance are not repeated in inventory hovers.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.1.3
 Date: 2026-05-29
   Features:

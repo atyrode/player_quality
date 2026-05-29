@@ -1,6 +1,6 @@
 # Playtest Guide
 
-Status: V0.1.3 real-client playtest path.
+Status: V0.1.4 real-client playtest path.
 
 ## Release Channel
 
@@ -18,10 +18,10 @@ Fallback GitHub release page:
 https://github.com/atyrode/player_quality/releases/latest
 ```
 
-Direct V0.1.3 GitHub zip:
+Direct V0.1.4 GitHub zip:
 
 ```text
-https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip
+https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip
 ```
 
 ## Install
@@ -44,21 +44,21 @@ Linux:
 
 ```sh
 mkdir -p ~/.factorio/mods
-curl -L -o ~/.factorio/mods/player_quality_0.1.3.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip
+curl -L -o ~/.factorio/mods/player_quality_0.1.4.zip https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:APPDATA\Factorio\mods"
-Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.3.zip"
+Invoke-WebRequest -Uri "https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip" -OutFile "$env:APPDATA\Factorio\mods\player_quality_0.1.4.zip"
 ```
 
 macOS:
 
 ```sh
 mkdir -p "$HOME/Library/Application Support/factorio/mods"
-curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.3.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.3.zip
+curl -L -o "$HOME/Library/Application Support/factorio/mods/player_quality_0.1.4.zip" https://github.com/atyrode/player_quality/releases/latest/download/player_quality_0.1.4.zip
 ```
 
 You can also download the zip from the release page in a browser, then place it in the same mods folder.
@@ -87,15 +87,15 @@ If Factorio says this command is unknown, `Player Quality` is not enabled in the
 Then:
 
 1. Open the character inventory.
-2. Confirm the attached `Quality crafting` panel appears.
-3. Confirm the next quality chance reads above `0.00%` and shows powered module count.
-4. Select `iron stick`.
-5. Select `rare` ingredient quality.
-6. Set count to `100`.
-7. Click `Craft`.
-8. Confirm rare iron plates are consumed and rare or better iron sticks are produced.
+2. Confirm the attached `Quality crafting` panel appears. If not, click the top `Quality` status button to open the fallback crafting window.
+3. Confirm the top `Quality` status button shows next-quality chance and powered module count.
+4. Open `/player-quality`.
+5. Click `Research module techs` if you want the personal quality module recipes unlocked for the current test.
+6. Click `Research quality techs` only when you want to test non-normal ingredient selection and upgrades.
+7. Select an unlocked recipe and unlocked ingredient quality, set a count, and click `Craft`.
+8. Confirm exact-quality ingredients are consumed and outputs do not exceed the qualities currently unlocked.
 
-The debug GUI is still available with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`. Use it to toggle infinite module energy or give yourself personal quality modules at the selected quality.
+The debug GUI is still available with `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`. Use it to toggle infinite module energy, give yourself personal quality modules at the selected quality, and manually research/lock test gates.
 
 Energy test:
 
@@ -106,10 +106,19 @@ Energy test:
 
 Research gate test:
 
-1. Start a clean save without `/player-quality-test-setup`.
+1. Start a clean save or use `Lock qualities` in the debug GUI.
 2. Confirm only researched qualities appear in the ingredient-quality selector.
-3. Research the regular vanilla quality module technologies.
-4. Confirm the matching personal quality module recipes unlock.
+3. Confirm personal quality module recipes are not listed before module tech research.
+4. Click `Research module techs`.
+5. Confirm the matching personal quality module recipes unlock.
+6. Click `Research quality techs`.
+7. Confirm new qualities appear and output upgrades stop at the highest researched quality.
+
+Balance setting test:
+
+1. Open Factorio's mod settings.
+2. Change `Personal quality chance multiplier`.
+3. Confirm `0.01` is divided by 100, `0.1` is divided by 10, and `1.0` is vanilla module chance.
 
 Also test the normal-quality path by selecting `normal` ingredient quality and crafting another batch.
 

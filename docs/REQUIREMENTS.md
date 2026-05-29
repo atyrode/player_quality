@@ -1,6 +1,6 @@
 # Requirements
 
-Status: V0.1.3 requirements snapshot on 2026-05-29.
+Status: V0.1.4 requirements snapshot on 2026-05-29.
 
 ## Functional Requirements
 
@@ -17,6 +17,8 @@ Status: V0.1.3 requirements snapshot on 2026-05-29.
 - The output quality roll should match Factorio quality behavior: roll once using total quality chance; if upgraded, repeat further upgrades with the game's 10% follow-up chance until the roll fails or the maximum unlocked quality is reached.
 - Equipped personal quality modules must have stored energy to contribute to quality crafting.
 - Personal quality module recipes must unlock with the matching vanilla quality module technologies, including when added to an existing save.
+- Personal quality module chance must be configurable from 0.01x to 1.0x, defaulting to 0.1x.
+- Personal quality module equipment should be a meaningful armor-grid commitment; current target is 4x4.
 - Multiplayer should work out of the box by keeping all state in deterministic runtime script state.
 
 ## User Experience Requirements
@@ -29,8 +31,8 @@ Status: V0.1.3 requirements snapshot on 2026-05-29.
 
 ## Compatibility Requirements
 
-- Target Factorio 2.0+ with the quality feature enabled.
-- Prefer depending on `quality` rather than `space-age` if the feature can work without Space Age-specific planets or recipes.
+- Target Factorio 2.0+ Space Age with the quality feature enabled.
+- Depend on `space-age` explicitly while the mod is designed and tested against Space Age quality progression.
 - Avoid direct edits to vanilla recipes where possible.
 - Avoid changing existing armor grid definitions unless required to let the new equipment fit.
 - Use a `player-quality` namespace for custom prototypes, settings, GUI element names, shortcuts, custom inputs, and runtime state.

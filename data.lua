@@ -17,9 +17,10 @@ local equipment_specs = {
     },
     order = "a[quality-module-equipment]-a[quality-module]",
     ingredients = {
-      { type = "item", name = "quality-module", amount = 1 },
-      { type = "item", name = "electronic-circuit", amount = 5 },
-      { type = "item", name = "battery", amount = 2 }
+      { type = "item", name = "quality-module", amount = 5 },
+      { type = "item", name = "electronic-circuit", amount = 50 },
+      { type = "item", name = "steel-plate", amount = 20 },
+      { type = "item", name = "battery", amount = 20 }
     }
   },
   {
@@ -38,9 +39,10 @@ local equipment_specs = {
     },
     order = "a[quality-module-equipment]-b[quality-module-2]",
     ingredients = {
-      { type = "item", name = "quality-module-2", amount = 1 },
-      { type = "item", name = "advanced-circuit", amount = 5 },
-      { type = "item", name = "battery", amount = 4 }
+      { type = "item", name = "quality-module-2", amount = 5 },
+      { type = "item", name = "advanced-circuit", amount = 50 },
+      { type = "item", name = "steel-plate", amount = 40 },
+      { type = "item", name = "battery", amount = 40 }
     }
   },
   {
@@ -59,9 +61,10 @@ local equipment_specs = {
     },
     order = "a[quality-module-equipment]-c[quality-module-3]",
     ingredients = {
-      { type = "item", name = "quality-module-3", amount = 1 },
-      { type = "item", name = "processing-unit", amount = 5 },
-      { type = "item", name = "battery", amount = 8 }
+      { type = "item", name = "quality-module-3", amount = 5 },
+      { type = "item", name = "processing-unit", amount = 50 },
+      { type = "item", name = "low-density-structure", amount = 20 },
+      { type = "item", name = "battery", amount = 80 }
     }
   }
 }
@@ -124,8 +127,8 @@ for _, spec in pairs(equipment_specs) do
       priority = "medium"
     },
     shape = {
-      width = 1,
-      height = 1,
+      width = 4,
+      height = 4,
       type = "full"
     },
     energy_source = {
@@ -146,7 +149,6 @@ for _, spec in pairs(equipment_specs) do
     subgroup = "equipment",
     order = spec.order,
     stack_size = 20,
-    custom_tooltip_fields = quality_tooltip_fields(spec),
     place_as_equipment_result = spec.equipment
   })
 
@@ -191,6 +193,6 @@ for _, spec in pairs(equipment_specs) do
       recipe = spec.recipe
     })
   elseif data.raw.recipe[spec.recipe] then
-    data.raw.recipe[spec.recipe].enabled = true
+    data.raw.recipe[spec.recipe].enabled = false
   end
 end

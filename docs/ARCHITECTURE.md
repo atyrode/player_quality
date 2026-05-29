@@ -18,6 +18,7 @@ Expected first runtime shape:
 
 - `data.lua`: declare quality-module armor equipment, items, recipes, shortcut/custom input if needed.
 - `control.lua`: GUI lifecycle, quality crafting logic, equipment scanning, craft completion, and save/load hooks.
+- `settings.lua`: runtime-global personal quality chance multiplier.
 - `locale/en/player-quality.cfg`: player-facing names, descriptions, GUI captions, and messages.
 
 ## Ownership Boundaries
@@ -40,6 +41,7 @@ Do not add cross-cutting runtime systems until the first feature proves they are
 Preferred V1 state:
 
 - Per-player GUI state: selected recipe, ingredient quality, count, and debug infinite-energy toggle.
+- Runtime-global setting state: personal quality chance multiplier, default `0.1`, clamped between `0.01` and `1.0`.
 - Optional per-player craft queue only if real crafting time is implemented.
 
 Avoid persistent state for equipment effects; compute equipped quality-module chance from the current armor equipment grid when needed.
@@ -63,7 +65,8 @@ Likely events:
 - `on_gui_opened` and relative GUI anchoring for the character-inventory `Quality crafting` panel.
 - `on_lua_shortcut` or a custom input for opening the debug GUI.
 - `on_research_finished` and configuration sync for retroactive personal quality module recipe unlocks.
-- `on_player_armor_inventory_changed`, `on_equipment_inserted`, and `on_equipment_removed` only if cached equipment state is needed.
+- `on_player_armor_inventory_changed`, `on_player_placed_equipment`, and `on_player_removed_equipment` for refreshing chance displays.
+- `on_runtime_mod_setting_changed` for refreshing the personal chance multiplier display.
 - `on_tick` only if a custom timed crafting queue is implemented.
 - `on_player_crafted_item` only if a later iteration modifies vanilla hand-crafting output.
 
@@ -89,10 +92,10 @@ Avoid modifying vanilla quality modules or armor grids unless testing proves it 
 
 Current implementation details:
 
-- The equipment prototypes are 1x1 `battery-equipment` with a 1MJ buffer and 200kW input flow so they can be inserted into standard armor grids and spend charge on quality crafting.
-- Recipes consume the matching vanilla quality module plus a small amount of circuits and batteries.
-- Recipes are unlocked from the matching vanilla quality module technologies when those technologies exist; runtime sync also enables them in existing saves where those technologies were already researched.
-- Runtime quality rolls read the equipped module item's quality-scaled `quality` effect, require each module to have enough stored energy for the requested craft count, then follow the prototype quality chain with `current.next_probability` as the vanilla multiplier.
+- The equipment prototypes are 4x4 `battery-equipment` with a 1MJ buffer and 200kW input flow so they can be inserted into standard armor grids and spend charge on quality crafting.
+- Recipes consume the matching vanilla quality module plus a larger amount of circuits, batteries, and tier-appropriate structural ingredients.
+- Recipes are unlocked from the matching vanilla quality module technologies when those technologies exist; runtime sync explicitly disables them again if an old save had them enabled before research.
+- Runtime quality rolls read the equipped module item's quality-scaled `quality` effect, multiply it by the global personal chance multiplier, require each module to have enough stored energy for the requested craft count, then follow the prototype quality chain with `current.next_probability` as the vanilla multiplier.
 - Runtime quality selection and upgrade rolls are capped by qualities unlocked by the player's force.
 
 ## Compatibility Practices

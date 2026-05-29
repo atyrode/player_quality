@@ -11,6 +11,8 @@ The target mod lets players put quality-module-style equipment into modular armo
 - Factorio mod scaffold: `info.json`, `data.lua`, `control.lua`, and `locale/`.
 - Factorio changelog: `changelog.txt`.
 - Current prototype: personal quality-module armor equipment plus an instant `Quality crafting` panel attached to the character inventory GUI for simple hand-craftable item recipes.
+- A top status button shows current next-quality chance and opens a player-facing fallback crafting window if the inventory-attached panel is not visible.
+- A runtime-global mod setting scales personal quality chance from `0.01` to `1.0`; default `0.1` means divided by 10.
 - Debug tools remain available through `Ctrl + Shift + Q`, the shortcut button, or `/player-quality`.
 
 ## Development
@@ -79,7 +81,7 @@ The full install and instant new-save setup path is in [docs/PLAYTEST.md](docs/P
 ## Fast Manual Test
 
 1. Run `scripts/install-local.sh`.
-2. Start Factorio 2.0 or Space Age with the `quality` mod and `player_quality` enabled.
+2. Start Factorio 2.0 Space Age with `player_quality` enabled.
 3. Start or load a save.
 4. Use this console command for a quick prototype test.
 
@@ -87,11 +89,12 @@ The full install and instant new-save setup path is in [docs/PLAYTEST.md](docs/P
 /player-quality-test-setup
 ```
 
-5. Open the character inventory to use the `Quality crafting` panel. Use `Ctrl + Shift + Q`, the shortcut button, or `/player-quality` only for the debug GUI.
-6. Select an unlocked simple recipe such as iron stick, choose `rare` ingredient quality, set a count, and craft.
-7. Confirm rare iron plates are consumed and the output is rare or better.
+5. Open the character inventory to use the `Quality crafting` panel. If it does not appear, click the top `Quality` status button to open the player-facing fallback window.
+6. Use `/player-quality` only for debug controls such as infinite energy and manual research buttons.
+7. Select an unlocked simple recipe such as iron stick, choose an unlocked ingredient quality, set a count, and craft.
+8. Confirm exact-quality ingredients are consumed and the output does not exceed researched quality.
 
-V0.1.3 has been smoke-tested with Factorio 2.0.76 headless by creating and reloading a save with `quality`, `space-age`, and `player_quality` enabled. A temporary helper mod also validated the character-inventory relative GUI anchor. The actual GUI still needs a real client playtest.
+V0.1.4 has been smoke-tested with Factorio 2.0.76 headless by creating and reloading a save with `quality`, `space-age`, and `player_quality` enabled. The actual GUI still needs a real client playtest.
 
 ## Prototype Limits
 
@@ -99,7 +102,7 @@ V0.1.3 has been smoke-tested with Factorio 2.0.76 headless by creating and reloa
 - Crafting is instant for the first proof of concept.
 - Only unlocked, simple item recipes in the `crafting` category are listed.
 - Recipes with fluids, multiple products, probabilistic products, or non-item ingredients are skipped.
-- The current armor equipment is implemented as 1x1 battery equipment so it can live in a standard armor grid and consume charge per quality craft.
+- The current armor equipment is implemented as 4x4 battery equipment so it can live in a standard armor grid, cost meaningful space, and consume charge per quality craft.
 
 ## Documents
 

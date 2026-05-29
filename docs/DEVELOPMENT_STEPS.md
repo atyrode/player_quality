@@ -1,6 +1,6 @@
 # Development Checklist
 
-Status: V0.1.3 inventory-attached quality crafting panel implemented on 2026-05-29.
+Status: V0.1.4 gate fixes and balance setting implemented on 2026-05-29.
 
 ## Research
 
@@ -10,7 +10,7 @@ Status: V0.1.3 inventory-attached quality crafting panel implemented on 2026-05-
 - [x] Check official Factorio API/prototype docs for the target version.
 - [ ] Find one or two current reference mods if the feature touches a known pattern.
 - [x] Record implementation constraints in `docs/TECHNICAL_DIRECTION.md`.
-- [ ] Verify whether `quality` dependency alone is sufficient or whether `space-age` must be required.
+- [x] Require `space-age` for the current Space Age-targeted playtest path.
 - [x] Verify a relative GUI can be anchored to the character inventory for a vanilla-adjacent panel.
 
 ## Local Prerequisites
@@ -74,6 +74,8 @@ Portal result: V0.1.1 is published at `https://mods.factorio.com/mod/player_qual
 V0.1.2 adds `/player-quality-test-setup` so test saves can be prepared without a long `/c` command.
 
 V0.1.3 adds the character-inventory quality crafting panel, keeps `/player-quality` as a debug GUI, requires module energy, and enforces researched quality caps.
+
+V0.1.4 fixes reported recipe/quality gate test issues, adds explicit debug research buttons, adds a status-button fallback crafting window, increases module footprint/cost, and adds a runtime-global chance multiplier setting.
 
 ## Debugging Workflow
 

@@ -37,16 +37,16 @@ Confirm exact API names, lifecycle events, prototype formats, dependency syntax,
 
 - Target Factorio 2.0+.
 - The user is targeting Space Age because quality was added there.
-- The implementation should depend on the `quality` mod if sufficient, rather than requiring the full `space-age` mod.
+- The implementation now depends on `space-age` explicitly because current balancing and quality progression are tested against Space Age.
 - A Factorio 2.0.76 headless test install is available on the VPS under `/mnt/HC_Volume_105232828/shared/games/factorio-headless/factorio`.
 - GUI testing still requires a real Factorio client.
 
 ## Dependency Policy
 
 - Required: `base`.
-- Expected required: `quality`.
+- Expected required: `space-age`.
 - Avoid third-party dependencies for V1.
-- Do not require `space-age` unless the game or mod portal rejects a quality-only dependency for this behavior.
+- Revisit a quality-only dependency only after a dedicated compatibility pass.
 
 ## Expected Repository Shape
 
@@ -82,7 +82,7 @@ Likely V1 shape:
     `-- package.sh
 ```
 
-Current implementation matches this shape. Normal play uses a relative GUI attached to the character inventory, debug tooling uses a separate GUI, and crafting currently executes instantly through custom script logic.
+Current implementation matches this shape. Normal play uses a relative GUI attached to the character inventory plus a status-button fallback window, debug tooling uses a separate GUI, and crafting currently executes instantly through custom script logic.
 
 ## Build And Package Direction
 
@@ -122,6 +122,7 @@ Current local checks:
 - V0.1.1 also passed a temporary headless API smoke test covering the dot-call signatures for `LuaRecipe::has_category`, `LuaForce::is_quality_unlocked`, and `LuaItemPrototype::get_module_effects`.
 - V0.1.2 passed a temporary headless equipment-grid smoke test covering insertion of `player-quality-quality-module-3-equipment` into power armor.
 - V0.1.3 passed a headless create/reload check with Factorio 2.0.76. A temporary helper mod also validated the `standalone_character_gui` right-side relative GUI anchor.
+- V0.1.4 passed a headless create/reload check with Factorio 2.0.76 after changing dependencies, settings, GUI lifecycle, equipment footprint, and runtime events.
 
 ## Technical Risks
 
@@ -131,6 +132,6 @@ Current local checks:
 - GUI changes can conflict with player expectations or other mods if not scoped carefully.
 - Multiplayer behavior must be deterministic and avoid per-client-only assumptions.
 - `begin_crafting` only accepts `RecipeID`, not a documented recipe quality parameter, so quality ingredient selection likely requires custom crafting logic.
-- The native player crafting GUI may not expose every desired selector location; V0.1.3 uses a relative GUI attached to the standalone character GUI as the current vanilla-adjacent route.
+- The native player crafting GUI may not expose every desired selector location; V0.1.4 uses a relative GUI attached to the controller GUI plus a status-button fallback window.
 - Personal quality module equipment uses `battery-equipment` with a 1MJ buffer and 200kW input flow so energy state is visible and script-controllable.
 - Reimplementing recipe handling can get complex for fluids, multiple products, catalysts, recursive prerequisites, and unlock gating. V1 should restrict eligible recipes until each case is proven.

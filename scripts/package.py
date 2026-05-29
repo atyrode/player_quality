@@ -16,6 +16,7 @@ def package_files():
     files = [
         "info.json",
         "data.lua",
+        "settings.lua",
         "control.lua",
         "README.md",
         "changelog.txt",

@@ -1,6 +1,6 @@
 # Project Spec
 
-Status: V0.1.3 inventory-attached quality crafting panel implemented on 2026-05-29.
+Status: V0.1.4 gate fixes, fallback crafting window, and balance setting implemented on 2026-05-29.
 
 ## Goal
 
@@ -46,7 +46,7 @@ Implementation files likely needed:
 - `locale/en/player-quality.cfg`
 - `scripts/package.sh` once local testing is ready
 
-Status: implemented locally as a packageable first prototype. Factorio 2.0.76 headless can load the mod, create a new save, and reload that save. V0.1.1 fixed the first reported GUI-open crash. V0.1.2 adds `/player-quality-test-setup` for faster real-client testing. V0.1.3 moves normal play to a character-inventory relative GUI, keeps the old window as debug-only tooling, requires module energy, and gates selectable/output qualities by research.
+Status: implemented locally as a packageable first prototype. Factorio 2.0.76 headless can load the mod, create a new save, and reload that save. V0.1.1 fixed the first reported GUI-open crash. V0.1.2 adds `/player-quality-test-setup` for faster real-client testing. V0.1.3 moves normal play to a character-inventory relative GUI, keeps the old window as debug-only tooling, requires module energy, and gates selectable/output qualities by research. V0.1.4 fixes reported gate/test issues, adds a fallback player-facing crafting window, adds a status button, increases equipment footprint/cost, and adds a personal chance multiplier setting.
 
 Validation:
 
